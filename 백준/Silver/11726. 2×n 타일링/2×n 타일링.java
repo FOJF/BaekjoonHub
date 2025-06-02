@@ -14,7 +14,7 @@ public class Main {
 		for (int i = 2; i < n; i++) {
 			int temp = answers[0];
 			answers[0] = answers[1];
-			answers[1] = (temp%10007+answers[0]%10007)%10007;
+			answers[1] = (temp+answers[0])%10007;
 		}
 
 		if (n == 1) System.out.println(answers[0]);
