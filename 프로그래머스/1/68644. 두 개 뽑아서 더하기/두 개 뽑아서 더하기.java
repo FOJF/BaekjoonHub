@@ -10,13 +10,6 @@ class Solution {
             }
         }
         
-        int[] answer = new int[treeSet.size()];
-        int answerIdx = 0;
-        for(int i : treeSet) {
-            answer[answerIdx++] = i;
-        }
-        
-        
         return treeSet;
     }
 }
