@@ -9,15 +9,9 @@ class Solution {
             int endIdx = commands[i][1];
             int targetIdx = commands[i][2]-1;
             
-            int[] temp = new int[endIdx-startIdx];
+            int[] temp = Arrays.copyOfRange(array, startIdx, endIdx);
             
-            int tempIdx = 0;
-            for(int j = startIdx; j < endIdx; j++) {
-                temp[tempIdx++] = array[j];
-            }
-            
-            Arrays.sort(temp);
-            
+            Arrays.sort(temp);            
             answer[i] = temp[targetIdx];
         }
         
