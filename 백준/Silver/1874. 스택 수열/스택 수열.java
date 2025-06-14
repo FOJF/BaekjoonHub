@@ -23,9 +23,8 @@ public class Main {
         int nextNum = 1;
 
         for(int answer : answerStack) {
-            for (int i = nextNum; i <= answer; i++) {
-                push(i);
-                nextNum++;
+            while(nextNum <= answer) {
+                push(nextNum++);
                 sb.append("+\n");
             }
 
