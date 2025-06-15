@@ -27,11 +27,10 @@ public class Main {
 				if (hashMap.size() <= 2) {
 					max = Math.max(max, j-i+1);
 				} else {
-					// System.out.println(hashMap.get(tang[i]) == null);
-					// hashMap.remove(tang[j]);
+					int v = hashMap.get(tang[i]);
 
-					if (hashMap.get(tang[i]) == 1) hashMap.remove(tang[i]);
-					else hashMap.put(tang[i], hashMap.get(tang[i])-1);
+					if (v == 1) hashMap.remove(tang[i]);
+					else hashMap.put(tang[i], v-1);
 
 					break;
 				}
