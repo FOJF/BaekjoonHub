@@ -16,8 +16,12 @@ public class Main {
 
 		br.close();
 
+		StringBuilder sb = new StringBuilder();
+
 		for (String s : treeMap.keySet()) {
-			System.out.println(s + " " + treeMap.get(s));
+			sb.append(s).append(" ").append(treeMap.get(s)).append("\n");
 		}
+
+		System.out.println(sb);
 	}
 }
