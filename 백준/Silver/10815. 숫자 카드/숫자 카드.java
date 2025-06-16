@@ -20,13 +20,13 @@ public class Main {
 		br.readLine();
 
 		input = br.readLine().split(" ");
+		br.close();
 
 		StringBuilder sb = new StringBuilder();
 		for(String s : input) {
 			sb.append(hashSet.contains(Integer.parseInt(s)) ? "1" : "0").append(" ");
 		}
 
-		br.close();
 
 		System.out.println(sb);
 	}
