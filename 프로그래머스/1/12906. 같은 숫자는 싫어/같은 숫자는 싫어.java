@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Solution {
-    public int[] solution(int []arr) {     
+    public Stack<Integer> solution(int []arr) {     
         Stack<Integer> stack = new Stack<>();
         
         stack.push(arr[0]);
@@ -10,14 +10,7 @@ public class Solution {
             
             stack.push(num);
         }
-
-        int size = stack.size();
-        int[] answer = new int[size];
-    
-        for (int i = size-1; i >= 0; i--) {
-            answer[i] = stack.pop();
-        }
-    
-        return answer;
+        
+        return stack;
     }
 }
