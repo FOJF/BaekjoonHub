@@ -25,10 +25,12 @@ public class Main {
 
         haventHeard.retainAll(haventMet);
 
-        System.out.println(haventHeard.size());
+        StringBuilder sb = new StringBuilder();
+        sb.append(haventHeard.size()).append("\n");
         
         for(String s : haventHeard) {
-            System.out.println(s);
+            sb.append(s).append("\n");
         }
+        System.out.println(sb);
     }
 }
