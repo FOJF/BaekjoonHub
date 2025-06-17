@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -9,46 +10,26 @@ public class Main {
         int n = Integer.parseInt(s.split(" ")[0]);
         int k = Integer.parseInt(s.split(" ")[1]);
 
-        int[] numbers = new int[n];
+        Queue<Integer> q = new LinkedList<>();
 
         for (int i = 0; i < n; i++) {
-            numbers[i] = i + 1;
+            q.offer(i+1);
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        bw.write("<");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<");
 
-        int size = numbers.length;
-        int index = -1;
-
-        while (size > 1) {
-            int countNotEmpty = 0;
-
-            while (countNotEmpty < k) {
-                index = (index + 1) % numbers.length;
-
-                if (numbers[index] != 0) countNotEmpty++;
+        while (!q.isEmpty()) {
+            int curIdx = 1;
+            while (curIdx++ < k) {
+                q.offer(q.poll());
             }
 
-            int removedNum = pop(numbers, index);
-            bw.write(removedNum + ", ");
-            size--;
+            sb.append(q.poll()).append(", ");
         }
 
-        for (int number : numbers) {
-            if (number != 0) {
-                bw.write(number + ">");
-                break;
-            }
-        }
-
-        bw.flush();
-        bw.close();
-    }
-
-    static int pop(int[] targetArr, int index) {
-        int val = targetArr[index];
-        targetArr[index] = 0;
-        return val;
+        sb.setLength(sb.length()-2);
+        sb.append(">");
+        System.out.println(sb);
     }
 }
