@@ -8,28 +8,27 @@ public class Main {
 
         int t = Integer.parseInt(br.readLine());
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < t; i++) {
             int n = Integer.parseInt(br.readLine());
-            System.out.println(getPrintCnt(n, true) + " "+ getPrintCnt(n, false));
+         //   System.out.println(getPrintCnt(n, true) + " "+ getPrintCnt(n, false));
+            int[] answer = getPrintCnt(n);
+            sb.append(answer[0]).append(" ").append(answer[1]).append("\n");
         }
 
         br.close();
+        System.out.println(sb);
     }
 
-    static int getPrintCnt(int n, boolean isZero) {
-        int[] beforeNumbers;
-        if (isZero) beforeNumbers = new int[]{1, 0};
-        else beforeNumbers = new int[]{0, 1};
+    static int[] getPrintCnt(int n) {
         
-        if (n == 0) return beforeNumbers[0];
-        
-        int newNumber = 0;
-        
+        if (n == 0) return new int[]{1,0};
+        int[] beforeNumbers = {0,1};
         for (int i = 2; i <= n; i++) {
-            newNumber = beforeNumbers[0] + beforeNumbers[1];
+            int newNumber = beforeNumbers[0] + beforeNumbers[1];
             beforeNumbers[0] = beforeNumbers[1];
             beforeNumbers[1] = newNumber;
         }
-        return beforeNumbers[1];
+        return beforeNumbers;
     }
 }
