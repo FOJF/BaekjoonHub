@@ -16,6 +16,7 @@ public class Main {
 
 	static int[][][] trays;
 	static int[][][] distances;
+	static Queue<Point> bfsQ = new LinkedList<>();
 
 	public static void main (String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,6 +31,7 @@ public class Main {
 				String[] line = br.readLine().split(" ");
 				for (int k = 0; k < trays[i][j].length; k++) {
 					int tomato = Integer.parseInt(line[k]);
+                    if (tomato == 1) bfsQ.add(new Point(i,j,k));
 					trays[i][j][k] = tomato;
 					distances[i][j][k] = tomato != 0 ? tomato : Integer.MAX_VALUE;
 				}
@@ -39,15 +41,7 @@ public class Main {
 		br.close();
 
 		// System.out.println(Arrays.deepToString(trays));
-
-		for (int i = 0; i < trays.length; i++) {
-			for (int j = 0; j < trays[i].length; j++) {
-				for (int k = 0; k < trays[i][j].length; k++) {
-					if (trays[i][j][k] == 1)
-						bfs(new Point(i,j,k));
-				}
-			}
-		}
+        bfs();
 
 		// bfs(new Point(0,1,3));
 
@@ -65,14 +59,8 @@ public class Main {
 		System.out.println(max-1);
 	}
 
-	public static void bfs(Point start) {
+	public static void bfs() {
 		int[][] delta = {{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{0,0,1},{0,0,-1}};
-		Queue<Point> bfsQ = new LinkedList<>();
-
-		bfsQ.offer(start);
-		distances[start.x][start.y][start.z] = 1;
-
-		int min = 0;
 
 		while(!bfsQ.isEmpty()) {
 			Point cur = bfsQ.poll();
