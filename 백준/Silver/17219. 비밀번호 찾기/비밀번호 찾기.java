@@ -17,11 +17,12 @@ public class Main {
             String[] sitePW = br.readLine().split(" ");
             passwords.put(sitePW[0], sitePW[1]);
         }
-
+        
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < m; i++) {
-            System.out.println(passwords.get(br.readLine()));
+            sb.append(passwords.get(br.readLine())).append("\n");
         }
-
+        System.out.println(sb);
         br.close();
     }
 }
