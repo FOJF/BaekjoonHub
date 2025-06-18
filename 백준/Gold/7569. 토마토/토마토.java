@@ -15,7 +15,6 @@ public class Main {
 	}
 
 	static int[][][] trays;
-	static int[][][] distances;
 	static Queue<Point> bfsQ = new LinkedList<>();
 
 	public static void main (String[] args) throws IOException {
@@ -24,16 +23,13 @@ public class Main {
 		int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
 		trays = new int[input[2]][input[1]][input[0]];
-		distances = new int[input[2]][input[1]][input[0]];
 
 		for (int i = 0; i < trays.length; i++) {
 			for (int j = 0; j < trays[i].length; j++) {
-				String[] line = br.readLine().split(" ");
+                StringTokenizer st = new StringTokenizer(br.readLine());
 				for (int k = 0; k < trays[i][j].length; k++) {
-					int tomato = Integer.parseInt(line[k]);
-                    if (tomato == 1) bfsQ.add(new Point(i,j,k));
-					trays[i][j][k] = tomato;
-					distances[i][j][k] = tomato != 0 ? tomato : Integer.MAX_VALUE;
+					trays[i][j][k] = Integer.parseInt(st.nextToken());
+                    if (trays[i][j][k] == 1) bfsQ.add(new Point(i,j,k));
 				}
 			}
 		}
@@ -48,11 +44,11 @@ public class Main {
 		// System.out.println(Arrays.deepToString(distances));
 
 		int max = 0;
-		for (int i = 0; i < distances.length; i++) {
-			for (int j = 0; j < distances[i].length; j++) {
-				for (int k = 0; k < distances[i][j].length; k++) {
-                    if (distances[i][j][k] == Integer.MAX_VALUE) {System.out.println("-1");return;}
-                    max = Math.max(max, distances[i][j][k]);
+		for (int i = 0; i < trays.length; i++) {
+			for (int j = 0; j < trays[i].length; j++) {
+				for (int k = 0; k < trays[i][j].length; k++) {
+                    if (trays[i][j][k] == 0) {System.out.println("-1");return;}
+                    max = Math.max(max, trays[i][j][k]);
                 }
 			}
 		}
@@ -72,11 +68,10 @@ public class Main {
 
 
 				// System.out.println(newX + " " + newY + " " + newZ);
-				if (hasIdx(newX, newY, newZ) && trays[newX][newY][newZ] == -1) distances[newX][newY][newZ] = -1;
 
-				if (isValidPoint(newX, newY, newZ) && distances[newX][newY][newZ] > distances[cur.x][cur.y][cur.z] + 1) {
+				if (isValidPoint(newX, newY, newZ) && trays[newX][newY][newZ] == 0) {
 					bfsQ.offer(new Point(newX, newY, newZ));
-					distances[newX][newY][newZ] = distances[cur.x][cur.y][cur.z] + 1;
+					trays[newX][newY][newZ] = trays[cur.x][cur.y][cur.z] + 1;
 				}
 			}
 		}
