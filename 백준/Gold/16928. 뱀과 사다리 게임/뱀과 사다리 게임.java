@@ -10,10 +10,11 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
 
-        int[] isVisited = new int[101];
+        int[] isVisited = new int[107];
 
-        int[] board = new int[101];
+        int[] board = new int[107];
         Arrays.setAll(board, i -> i);
+
 
         for (int i = 0; i < n + m; i++) {
             st = new StringTokenizer(br.readLine());
@@ -33,19 +34,17 @@ public class Main {
             int now = bfsQ.poll();
 
             for (int dir : delta) {
-                int nextIdx = now + dir;
-                if (nextIdx <= 100) {
-                    int realNext = board[nextIdx];
-                    if (isVisited[realNext] == 0) {
-                        bfsQ.add(realNext);
-                        isVisited[realNext] = isVisited[now] + 1;
+                int realNext = board[now + dir];
 
-                    }
+                if (realNext == 100) {
+                    System.out.println(isVisited[now] + 1);
+                    return;
+                }
 
-                    if (realNext == 100) {
-                        System.out.println(isVisited[100]);
-                        return;
-                    }
+                if (isVisited[realNext] == 0) {
+                    bfsQ.add(realNext);
+                    isVisited[realNext] = isVisited[now] + 1;
+
                 }
             }
         }
