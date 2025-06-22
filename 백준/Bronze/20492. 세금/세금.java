@@ -15,7 +15,8 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
         br.close();
-        
-        System.out.println((int)(n * 0.78) + " " + (int)(n*0.8+n*0.2*0.78));
+        StringBuilder sb = new StringBuilder();
+        sb.append((int) (n * 0.78)).append(" ").append((int) (n * 0.8 + n * 0.2 * 0.78));
+        System.out.println(sb);
     }
 }
