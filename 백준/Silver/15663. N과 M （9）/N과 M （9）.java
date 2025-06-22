@@ -31,7 +31,7 @@ public class Main {
 			for (int num : temp) {
 				answer.append(num).append(" ");
 			}
-
+            answer.append("\n");
 			return;
 		}
 
