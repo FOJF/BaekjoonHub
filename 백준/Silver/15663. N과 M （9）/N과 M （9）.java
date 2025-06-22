@@ -5,8 +5,9 @@ public class Main {
 
 	static int[] numbers;
 	static boolean[] isPicked;
-	static Set<String> answer = new LinkedHashSet<>();
+	// static Set<String> answer = new LinkedHashSet<>();
 	static List<Integer> temp = new ArrayList<>();
+	static StringBuilder answer = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,30 +22,24 @@ public class Main {
 
 		getAnswer(0,nm[1]);
 			
-		StringBuilder sb = new StringBuilder();
-
-		for (String s : answer) {
-			sb.append(s).append("\n");
-		}
-
-		System.out.println(sb);
+		System.out.println(answer);
 	}
 
 	public static void getAnswer(int start, int length) {
 		if (temp.size() == length) {
-			StringBuilder sb = new StringBuilder();
 
 			for (int num : temp) {
-				sb.append(num).append(" ");
+				answer.append(num).append(" ");
 			}
 
-			answer.add(sb.toString());
 			return;
 		}
 
+		int lastPick = 0;
 		for (int i = 0; i < numbers.length; i++) {
-			if (isPicked[i]) continue;
+			if (isPicked[i] || lastPick == numbers[i]) continue;
 
+			lastPick = numbers[i];
 			temp.add(numbers[i]);
 			isPicked[i] = true;
 			getAnswer(i+1, length);
