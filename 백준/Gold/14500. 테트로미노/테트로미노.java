@@ -16,10 +16,11 @@ public class Main {
 	static int[][] board;
 	final static int TETRO_SIZE = 4;
 
-	static List<Integer> temp = new ArrayList<>();
 	static boolean[][] isVisited;
 	static int max = 0;
-
+    static int sum = 0;
+    static int count = 0;
+    
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -36,11 +37,13 @@ public class Main {
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				temp.add(board[i][j]);
+                sum += board[i][j];
+                count++;
 				isVisited[i][j] = true;
 				dfs(new Point(i, j));
 				isVisited[i][j] = false;
-				temp.remove(temp.size()-1);
+                sum -= board[i][j];
+                count--;
 			}
 		}
 
@@ -48,8 +51,8 @@ public class Main {
 	}
 
 	public static void dfs(Point now) {
-		if (temp.size() == TETRO_SIZE) {
-			max = Math.max(max, temp.stream().mapToInt(i -> i).sum());
+		if (count == TETRO_SIZE) {
+			max = Math.max(max, sum);
 			return;
 		}
 
@@ -60,19 +63,23 @@ public class Main {
 			int nextY = now.y + dir[1];
 
 			if (isValidIdx(nextX, nextY) && !isVisited[nextX][nextY]) {
-				if (temp.size() == 2) { // ㅗ 
-					temp.add(board[nextX][nextY]);
+				if (count == 2) { // ㅗ 
+					sum += board[nextX][nextY];
+                    count++;
 					isVisited[nextX][nextY] = true;
 					dfs(now);
 					isVisited[nextX][nextY] = false;
-					temp.remove(temp.size()-1);
+					sum -= board[nextX][nextY];
+                    count--;
 				} 
 
-				temp.add(board[nextX][nextY]);
+                sum += board[nextX][nextY];
+                count++;
 				isVisited[nextX][nextY] = true;
 				dfs(new Point(nextX, nextY));
 				isVisited[nextX][nextY] = false;
-				temp.remove(temp.size()-1);
+                sum -= board[nextX][nextY];
+                count--;
 				
 			}
 		}
