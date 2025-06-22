@@ -33,8 +33,8 @@ public class Main {
                 isVisited[i][j] = true;
                 dfs(i, j);
                 isVisited[i][j] = false;
-                sum -= board[i][j];
                 count--;
+                sum -= board[i][j];
             }
         }
 
@@ -53,15 +53,15 @@ public class Main {
             int nextX = x + dir[0];
             int nextY = y + dir[1];
 
-            if (isValidIdx(nextX, nextY) && !isVisited[nextX][nextY]) {
+            if ((0 <= nextX && nextX < n) && (0 <= nextY && nextY < m) && !isVisited[nextX][nextY]) {
                 if (count == 2) { // ㅗ
                     sum += board[nextX][nextY];
                     count++;
                     isVisited[nextX][nextY] = true;
                     dfs(x, y);
                     isVisited[nextX][nextY] = false;
-                    sum -= board[nextX][nextY];
                     count--;
+                    sum -= board[nextX][nextY];
                 }
 
                 sum += board[nextX][nextY];
@@ -69,13 +69,9 @@ public class Main {
                 isVisited[nextX][nextY] = true;
                 dfs(nextX, nextY);
                 isVisited[nextX][nextY] = false;
-                sum -= board[nextX][nextY];
                 count--;
+                sum -= board[nextX][nextY];
             }
         }
-    }
-
-    public static boolean isValidIdx(int x, int y) {
-        return (0 <= x && x < n) && (0 <= y && y < m);
     }
 }
