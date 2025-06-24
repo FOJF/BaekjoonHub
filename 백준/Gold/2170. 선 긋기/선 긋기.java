@@ -27,18 +27,14 @@ public class Main {
 		int[] last = Arrays.copyOf(lines[0], lines[0].length);
 		int length = lines[0][1]-lines[0][0];
 
-		int beforeStartPoint = lines[0][0];
 
 		for (int i = 1; i < lines.length; i++) {
-			if (beforeStartPoint == lines[i][0]) continue; // 시작점이 같으면 갱신할 필요 X
 			if (last[0] <= lines[i][0] && last[1] >= lines[i][1]) continue;
 
 			if (last[1] > lines[i][0]) { // 중복으로 선을 놓는데 연장될 때	 
-				beforeStartPoint = lines[i][0];
 				length += lines[i][1]-last[1];
 				last[1] = lines[i][1];
 			} else { // 중복되게 선을 긋지 않을 때
-				beforeStartPoint = lines[i][0];
 				length += lines[i][1] - lines[i][0];
 				last = Arrays.copyOf(lines[i], lines[i].length);
 			}
