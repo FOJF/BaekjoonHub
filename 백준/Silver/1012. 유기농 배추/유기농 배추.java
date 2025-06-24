@@ -68,14 +68,11 @@ public class Main {
 
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < m; j++) {
-					if(isVisited[i][j]) continue;
-
-					isVisited[i][j] = true;
-					
-					if(farm[i][j] == 0) continue;
-
+					if(isVisited[i][j] || farm[i][j] == 0) continue;
+                    
 					bfsQ.offer(new Point(i,j));
-					answer++;
+					isVisited[i][j] = true;
+                    answer++;
 
 					while(!bfsQ.isEmpty()) {
 						Point p = bfsQ.poll();
