@@ -5,7 +5,7 @@ int main() {
     
     scanf("%d %d", &n, &k);
     
-    long wires[n];
+    int wires[n];
     long start, end = 1;
     
     for (int i = 0; i < n; i++) {
