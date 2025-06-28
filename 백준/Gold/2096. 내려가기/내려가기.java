@@ -1,60 +1,72 @@
 import java.io.*;
 
 public class Main {
+    static class FastReader {
+        final private int BUFFER_SIZE = 1 << 16;
+        private DataInputStream din;
+        private byte[] buffer;
+        private int bufferPointer, bytesRead;
+
+        public FastReader() {
+            din = new DataInputStream(System.in);
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+
+        public int nextInt() throws IOException {
+            int ret = 0;
+            byte c = read();
+            while (c <= ' ') c = read();
+            do {
+                ret = ret * 10 + c - '0';
+            } while ((c = read()) >= '0' && c <= '9');
+            return ret;
+        }
+
+        private void fillBuffer() throws IOException {
+            bytesRead = din.read(buffer, 0, BUFFER_SIZE);
+            if (bytesRead == -1) buffer[0] = -1;
+            bufferPointer = 0;
+        }
+
+        private byte read() throws IOException {
+            if (bufferPointer == bytesRead) fillBuffer();
+            return buffer[bufferPointer++];
+        }
+    }
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+        FastReader fr = new FastReader();
+        int n = fr.nextInt();
         
-        // DP 상태 배열 (고정 크기 4개 배열로 전체 처리)
-        int[] max = new int[3];
-        int[] min = new int[3];
+        int[] max = {fr.nextInt(), fr.nextInt(), fr.nextInt()};
+        int[] min = max.clone();
         int[] nextMax = new int[3];
         int[] nextMin = new int[3];
         
-        // 첫 번째 줄 파싱 및 초기화
-        parseLine(br.readLine(), max);
-        System.arraycopy(max, 0, min, 0, 3);
-        
-        // 두 번째 줄부터 처리
         for (int i = 1; i < n; i++) {
-            int[] input = new int[3];
-            parseLine(br.readLine(), input);
+            int a = fr.nextInt(), b = fr.nextInt(), c = fr.nextInt();
             
-            // 최대값 계산
-            nextMax[0] = input[0] + Math.max(max[0], max[1]);
-            nextMax[1] = input[1] + Math.max(max[0], Math.max(max[1], max[2]));
-            nextMax[2] = input[2] + Math.max(max[1], max[2]);
+            nextMax[0] = a + Math.max(max[0], max[1]);
+            nextMax[1] = b + Math.max(Math.max(max[0], max[1]), max[2]);
+            nextMax[2] = c + Math.max(max[1], max[2]);
             
-            // 최소값 계산
-            nextMin[0] = input[0] + Math.min(min[0], min[1]);
-            nextMin[1] = input[1] + Math.min(min[0], Math.min(min[1], min[2]));
-            nextMin[2] = input[2] + Math.min(min[1], min[2]);
+            nextMin[0] = a + Math.min(min[0], min[1]);
+            nextMin[1] = b + Math.min(Math.min(min[0], min[1]), min[2]);
+            nextMin[2] = c + Math.min(min[1], min[2]);
             
-            // 배열 참조 교체 (새 객체 생성 없이 상태 업데이트)
+            // 배열 참조 교체 (객체 생성 없음)
             int[] tempMax = max;
-            int[] tempMin = min;
             max = nextMax;
-            min = nextMin;
             nextMax = tempMax;
+            
+            int[] tempMin = min;
+            min = nextMin;
             nextMin = tempMin;
         }
         
-        // 결과 계산 및 출력
         int maxResult = Math.max(max[0], Math.max(max[1], max[2]));
         int minResult = Math.min(min[0], Math.min(min[1], min[2]));
         System.out.println(maxResult + " " + minResult);
-    }
-    
-    // 문자열 분리 없이 직접 파싱 (메모리 효율화)
-    private static void parseLine(String line, int[] arr) {
-        int index = 0;
-        for (int i = 0; i < 3; i++) {
-            int num = 0;
-            while (index < line.length() && line.charAt(index) != ' ') {
-                num = num * 10 + (line.charAt(index++) - '0');
-            }
-            arr[i] = num;
-            index++; // 공백 건너뛰기
-        }
     }
 }
