@@ -40,19 +40,8 @@ public class Main {
 	}
 
 	public static void addEdge(int vertexA, int vertexB) {
-		HashSet<Integer> hsA = vertices.get(vertexA);
-		HashSet<Integer> hsB = vertices.get(vertexB);
-		
-		if (hsA == null)
-			hsA = new HashSet<>(); 
-		if (hsB == null) 
-			hsB = new HashSet<>();
-
-		hsA.add(vertexB);
-		hsB.add(vertexA);
-
-		vertices.put(vertexA, hsA);
-		vertices.put(vertexB, hsB);
+        vertices.computeIfAbsent(vertexA,(k)-> new HashSet<>()).add(vertexB);
+        vertices.computeIfAbsent(vertexB,(k)-> new HashSet<>()).add(vertexA);
 	}
 
 	public static boolean dfs(int startVertex) {
