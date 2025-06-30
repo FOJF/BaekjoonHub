@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static HashMap<Integer, HashSet<Integer>> vertices = new HashMap<>();
+	static List<List<Integer>> vertices = new ArrayList<>();
 	static boolean[] isVisited;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,13 +12,19 @@ public class Main {
 		int vertexCnt = Integer.parseInt(ve[0]);
 		int edgeCnt = Integer.parseInt(ve[1]);
 
-		isVisited = new boolean[vertexCnt];
+		isVisited = new boolean[vertexCnt+1];
 
+        for (int i = 0; i < vertexCnt+1; i++) {
+            vertices.add(new ArrayList<>());
+        }
+        
 		for(int i = 0; i < edgeCnt; i++) {
 			String[] vertex = br.readLine().split(" ");
-			addEdge(Integer.parseInt(vertex[0]), Integer.parseInt(vertex[1]));
+            int a = Integer.parseInt(vertex[0]);
+            int b = Integer.parseInt(vertex[1]);
+            vertices.get(a).add(b);
+            vertices.get(b).add(a);
 		}
-		// System.out.println("finished ADD EDGE");
 
 		br.close();
 
@@ -28,47 +34,30 @@ public class Main {
 
 	public static int countConnectedComponent() {
 		int count = 0;
-		for(int i = 0; i < isVisited.length; i++) {
+		for(int i = 1; i < isVisited.length; i++) {
 			if(isVisited[i]) continue;
-			// System.out.println("Start dfs("+(i+1)+")");
-
-			if (dfs(i+1)) count++;
-
-			// System.out.println("Finished dfs("+(i+1)+")");
+            bfs(i);
+			count++;
 		}
 		return count;
 	}
 
-	public static void addEdge(int vertexA, int vertexB) {
-        vertices.computeIfAbsent(vertexA,(k)-> new HashSet<>()).add(vertexB);
-        vertices.computeIfAbsent(vertexB,(k)-> new HashSet<>()).add(vertexA);
-	}
-
-	public static boolean dfs(int startVertex) {
-		if(isVisited[startVertex-1]) return false;
+	public static void bfs(int startVertex) {
 		Queue<Integer> q = new LinkedList<>();
 
 		q.add(startVertex);
-		isVisited[startVertex-1] = true;
+		isVisited[startVertex] = true;
 
 		while(!q.isEmpty()) {
 			int vertex = q.poll();
-			// System.out.println("탐색 : "+vertex);
-			HashSet<Integer> linkedVertices = vertices.get(vertex);
-			if(linkedVertices == null) return true;
-
-			// System.out.println("linkedVertex");
+			List<Integer> linkedVertices = vertices.get(vertex);
 
 			for(Integer linkedVertex : linkedVertices) {
-			// System.out.println(linkedVertex);
-
-				if(isVisited[linkedVertex-1]) continue;
+				if(isVisited[linkedVertex]) continue;
 
 				q.add(linkedVertex);
-				isVisited[linkedVertex-1] = true;
+				isVisited[linkedVertex] = true;
 			}
 		}
-
-		return true;
 	}
 }
