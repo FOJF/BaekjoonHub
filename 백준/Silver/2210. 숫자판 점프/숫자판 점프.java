@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static Set<String> set;
+	static Set<Integer> set;
 	static char[][] board;
 
 	public static void main(String[] args) throws IOException {
@@ -30,11 +30,12 @@ public class Main {
 		System.out.println(set.size());
 	}
 
-	static StringBuilder tmp = new StringBuilder();
+	// static StringBuilder tmp = new StringBuilder();
+	static int tmp = 0;
 	static int[][] delta = {{0,1},{0,-1},{1,0},{-1,0}};
 	public static void dfs(int x, int y, int depth) {
 		if (depth == 6) {
-			set.add(tmp.toString());
+			set.add(tmp);
 			return;
 		}
 
@@ -43,9 +44,11 @@ public class Main {
 			int ny = y + dir[1];
 
 			if ((0 <= nx && nx < 5) && (0 <= ny && ny < 5)) {
-				tmp.append(board[x][y]);
+				// tmp.append(board[x][y]);
+				tmp = tmp * 10 + board[x][y] - '0';
 				dfs(nx, ny, depth+1);
-				tmp.setLength(tmp.length()-1);
+				tmp /= 10;
+				// tmp.setLength(tmp.length()-1);
 			}
 		}
 	}
