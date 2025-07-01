@@ -2,95 +2,77 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static List<Map<Integer, Integer>> adjList;
+    static class Edge {
+        int to, weight;
+        Edge(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+
+    static final int INF = 200_000_000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int e = Integer.parseInt(st.nextToken());
 
-        adjList = new ArrayList<>();
-
-        for (int i = 0; i < n+1; i++) {
-            adjList.add(new HashMap<>());
+        List<List<Edge>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
         }
 
         for (int i = 0; i < e; i++) {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            int dist = Integer.parseInt(st.nextToken());
-
-            adjList.get(a).put(b, dist);
-            adjList.get(b).put(a, dist);
+            int w = Integer.parseInt(st.nextToken());
+            graph.get(a).add(new Edge(b, w));
+            graph.get(b).add(new Edge(a, w));
         }
 
         st = new StringTokenizer(br.readLine());
-        int a = Integer.parseInt(st.nextToken());
-        int b = Integer.parseInt(st.nextToken());
+        int v1 = Integer.parseInt(st.nextToken());
+        int v2 = Integer.parseInt(st.nextToken());
         br.close();
 
-        int sum1 = getShortestStopOver(new int[]{1,a,b,n}, n);
-        int sum2 = getShortestStopOver(new int[]{1,b,a,n}, n);
+        // 다익스트라 3회 실행
+        int[] distFrom1 = dijkstra(1, n, graph);
+        int[] distFromV1 = dijkstra(v1, n, graph);
+        int[] distFromV2 = dijkstra(v2, n, graph);
 
-        int min = Math.min(sum1,sum2);
+        long path1 = (long)distFrom1[v1] + distFromV1[v2] + distFromV2[n];
+        long path2 = (long)distFrom1[v2] + distFromV2[v1] + distFromV1[n];
 
-        System.out.println(min == Integer.MAX_VALUE ? -1 : min);
+        long ans = Math.min(path1, path2);
+        System.out.println(ans >= INF ? -1 : ans);
     }
 
-    public static int getShortestStopOver(int[] ways, int nodeCnt) {
-        int sum = 0;
-        for (int i = 0; i < ways.length-1; i++) {
-            int shortest = getShortest(ways[i], ways[i+1], nodeCnt);
+    static int[] dijkstra(int start, int n, List<List<Edge>> graph) {
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, INF);
+        dist[start] = 0;
 
-            if (shortest == Integer.MAX_VALUE) {
-                sum = Integer.MAX_VALUE;
-                break;
-            } else {
-                sum += shortest;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        pq.offer(new int[]{start, 0});
+
+        boolean[] visited = new boolean[n + 1];
+
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int u = cur[0], d = cur[1];
+            if (visited[u]) continue;
+            visited[u] = true;
+
+            for (Edge e : graph.get(u)) {
+                int v = e.to, w = e.weight;
+                if (dist[v] > d + w) {
+                    dist[v] = d + w;
+                    pq.offer(new int[]{v, dist[v]});
+                }
             }
         }
-        return sum;
-    }
-
-    public static int getShortest(int from, int to, int nodeCnt) {
-        if (from == to) return 0;
-
-        boolean[] visited = new boolean[nodeCnt+1];
-
-        Queue<int[]> q = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
-
-        q.add(new int[]{from,0});
-
-        while(!q.isEmpty()) {
-            int[] now = q.poll();
-
-            if (now[0] == to) return now[1];
-            if (visited[now[0]]) continue;
-            visited[now[0]] = true;
-
-            Map<Integer, Integer> nexts = adjList.get(now[0]);
-
-            for (int next : nexts.keySet()) {
-                int dist = nexts.get(next);
-
-                q.add(new int[]{next, dist + now[1]});
-            }
-        }
-
-        return Integer.MAX_VALUE;
+        return dist;
     }
 }
-
-/*
-4 6
-1 2 3
-2 3 3
-3 4 1
-1 3 5
-2 4 5
-1 4 4
-2 3
-*/
