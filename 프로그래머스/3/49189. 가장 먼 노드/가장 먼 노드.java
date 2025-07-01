@@ -33,12 +33,7 @@ class Solution {
                 max = Math.max(max, distance[next]);
             }
         }
-        int answer = 0;
-        
-        for(int dist : distance) {
-            if (dist == max) answer++;
-        } 
-        
-        return answer;
+        int m = max;
+        return (int)Arrays.stream(distance).filter(i -> i == m).count();
     }
 }
