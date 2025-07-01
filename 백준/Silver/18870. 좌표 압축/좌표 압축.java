@@ -10,20 +10,14 @@ public class Main {
 		
 		br.close();
 		
-		int[] arr = new int[n];
+		int[] arr = Arrays.stream(input).mapToInt(Integer::parseInt).toArray();
 
-		Set<Integer> treeSet = new TreeSet<>();
-		for (int i = 0; i < n; i++) {
-			int num = Integer.parseInt(input[i]);
-			treeSet.add(num);
-			arr[i] = num;
-		}
-		List<Integer> list = new ArrayList<>(treeSet);
-
+        int[] set = Arrays.stream(input).mapToInt(Integer::parseInt).distinct().sorted().toArray();
+		
 		StringBuilder sb = new StringBuilder();
 
 		for(int num : arr) {
-			sb.append(Collections.binarySearch(list, num)).append(" ");
+			sb.append(Arrays.binarySearch(set, num)).append(" ");
 		}
 		
 		System.out.println(sb);
