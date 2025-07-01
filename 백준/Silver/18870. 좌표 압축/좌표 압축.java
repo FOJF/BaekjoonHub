@@ -6,17 +6,20 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int n = Integer.parseInt(br.readLine());
-		String[] input = br.readLine().split(" ");
-		
+        StringTokenizer st = new StringTokenizer(br.readLine());
 		br.close();
-		
-		int[] arr = Arrays.stream(input).mapToInt(Integer::parseInt).toArray();
+        
+        int[] original = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            original[i] = Integer.parseInt(st.nextToken());
+        }
 
-        int[] set = Arrays.stream(input).mapToInt(Integer::parseInt).distinct().sorted().toArray();
+        int[] set = Arrays.stream(original).distinct().sorted().toArray();
 		
 		StringBuilder sb = new StringBuilder();
 
-		for(int num : arr) {
+		for(int num : original) {
 			sb.append(Arrays.binarySearch(set, num)).append(" ");
 		}
 		
