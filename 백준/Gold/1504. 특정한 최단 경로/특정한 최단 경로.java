@@ -58,29 +58,29 @@ public class Main {
     public static int getShortest(int from, int to, int nodeCnt) {
         if (from == to) return 0;
 
-        int[] distance = new int[nodeCnt+1];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        boolean[] visited = new boolean[nodeCnt+1];
 
-        Queue<Integer> q = new LinkedList<>();
+        Queue<int[]> q = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
 
-        q.add(from);
-        distance[from] = 0;
+        q.add(new int[]{from,0});
 
         while(!q.isEmpty()) {
-            int now = q.poll();
+            int[] now = q.poll();
 
-            Map<Integer, Integer> nexts = adjList.get(now);
+            if (now[0] == to) return now[1];
+            if (visited[now[0]]) continue;
+            visited[now[0]] = true;
+
+            Map<Integer, Integer> nexts = adjList.get(now[0]);
 
             for (int next : nexts.keySet()) {
                 int dist = nexts.get(next);
-                if (distance[next] <= distance[now] + dist) continue;
 
-                q.add(next);
-                distance[next] = distance[now] + dist;
+                q.add(new int[]{next, dist + now[1]});
             }
         }
 
-        return distance[to];
+        return Integer.MAX_VALUE;
     }
 }
 
