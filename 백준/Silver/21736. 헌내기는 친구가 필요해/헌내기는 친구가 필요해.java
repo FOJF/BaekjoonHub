@@ -3,23 +3,10 @@ import java.util.*;
 
 public class Main {
 	static class Point {
-		private int x;
-		private int y;
+		int x;
+		int y;
 
 		public Point (int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public int getX() {
-			return this.x;
-		}
-
-		public int getY() {
-			return this.y;
-		}
-
-		public void setXY(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
@@ -50,39 +37,40 @@ public class Main {
 		br.close();
 
 		// System.out.println(Arrays.deepToString(board));
-		System.out.println(getFriendCnt(startP));
+        int answer = getFriendCnt(startP);
+		System.out.println(answer == 0 ? "TT" : answer);
 
 	}
 
-	public static String getFriendCnt(Point startP) {
+	public static int getFriendCnt(Point startP) {
 		int[][] delta = {{1,0},{-1,0},{0,1},{0,-1}};
 		
 		Queue<Point> bfsQ = new LinkedList<>();
 
 		bfsQ.add(startP);
-		isVisited[startP.getX()][startP.getY()] = true;
+		isVisited[startP.x][startP.y] = true;
 
 		int friendCnt = 0;
 
 		while(!bfsQ.isEmpty()) {
 			Point cur = bfsQ.poll();
-			int curX = cur.getX();
-			int curY = cur.getY();
+			int x = cur.x;
+			int y = cur.y;
 
-			if (board[curX][curY] == 'P') friendCnt++;
+			if (board[x][y] == 'P') friendCnt++;
 
 			for(int[] dir : delta) {
-				int nextX = curX + dir[0];
-				int nextY = curY + dir[1];
-				if ((0 <= nextX && nextX < board.length) && (0 <= nextY && nextY < board[0].length) 
-					&& !isVisited[nextX][nextY] && board[nextX][nextY] != 'X') {
-					bfsQ.add(new Point(nextX, nextY));
-					isVisited[nextX][nextY] = true;
+				int nx = x + dir[0];
+				int ny = y + dir[1];
+				if ((0 <= nx && nx < board.length) && (0 <= ny && ny < board[0].length) 
+					&& !isVisited[nx][ny] && board[nx][ny] != 'X') {
+					bfsQ.add(new Point(nx, ny));
+					isVisited[nx][ny] = true;
 				}
 			}
 
 		}
 
-		return friendCnt == 0 ? "TT" : String.valueOf(friendCnt);
+		return friendCnt;
 	}
 }
