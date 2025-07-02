@@ -18,7 +18,8 @@ public class Main {
 
 		for (int i = 1; i < numbers.length; i++) {
 			int maxIdx = -1; // 가능한 것 중에 가장 긴 수열을 가진 인덱스
-			int maxSize = 0;
+			int maxSize = 0; // 가능한 것 중 가장 긴 수열의 길이
+
 			for (int j = 0; j < i; j++) {
 				if (numbers[j] < numbers[i] && maxSize < list.get(j).size()) { // j가 가능하다면 
 					maxIdx = j;
@@ -32,7 +33,7 @@ public class Main {
 			} else { // 가능한 것의 인덱스를 찾았다면 
 				temp = new ArrayList<>(list.get(maxIdx));
 			}
-			
+
 			temp.add(numbers[i]);
 			list.add(temp);
 		}
@@ -45,13 +46,14 @@ public class Main {
 
 		// System.out.println(list);
 
+		StringBuilder sb = new StringBuilder();
 
-		System.out.println(list.get(maxIdx).size());
+		sb.append(list.get(maxIdx).size()).append("\n");
 
 		for (int n : list.get(maxIdx)) {
-			System.out.print(n + " ");
+			sb.append(n).append(" ");
 		}
-		System.out.println();
+		System.out.println(sb);
 	}
 }
 
