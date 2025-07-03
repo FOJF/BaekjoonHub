@@ -15,16 +15,13 @@ class Solution {
         while(start<=end) {
             if (sum > k) {
                 sum -= sequence[start];
-                if (start == sequence.length-1) break;
-                start++;
+                if (++start == sequence.length) break;
             } else if (sum == k) {
                 pq.add(new int[]{start, end});
-                if (end == sequence.length-1) break;
-                end++;
+                if (++end == sequence.length) break;
                 sum += sequence[end];
             } else {
-                if (end == sequence.length-1) break;
-                end++;
+                if (++end == sequence.length) break;
                 sum += sequence[end];
             }
         }
