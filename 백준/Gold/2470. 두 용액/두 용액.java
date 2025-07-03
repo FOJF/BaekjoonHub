@@ -19,10 +19,12 @@ public class Main {
 
 		while(start < end) {
 			int sum = liquids[start] + liquids[end];
-			if (Math.abs(sum) < abs) { // 답의 가능성이 있는 경우
+			
+            if (Math.abs(sum) < abs) { // 답의 가능성이 있는 경우
 				answer[0] = liquids[start];
 				answer[1] = liquids[end];
 				abs = Math.abs(sum);
+                if (sum == 0) break;
 			}
 
 			if(sum < 0) {
