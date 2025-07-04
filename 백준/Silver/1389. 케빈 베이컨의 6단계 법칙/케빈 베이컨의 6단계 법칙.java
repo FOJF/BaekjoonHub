@@ -32,14 +32,8 @@ public class Main {
 	}
 
 	public static void addEdge(int v1, int v2) {
-		HashSet<Integer> hs1 = hashMap.getOrDefault(v1, new HashSet<Integer>());
-		HashSet<Integer> hs2 = hashMap.getOrDefault(v2, new HashSet<Integer>());
-
-		hs1.add(v2);
-		hs2.add(v1);
-
-		hashMap.put(v1, hs1);
-		hashMap.put(v2, hs2);
+        hashMap.computeIfAbsent(v1, k -> new HashSet<>()).add(v2);
+        hashMap.computeIfAbsent(v2, k -> new HashSet<>()).add(v1);
 	}
 
 
