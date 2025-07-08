@@ -39,8 +39,9 @@ public class Main {
 			for (int j = 0; j < m; j++) {
 				int num = distanceBoard[i][j];
 				if (board[i][j] == 0) num = 0;
-				else if (num == Integer.MAX_VALUE) num = -1;
-				
+				else if (num == 0) num = -1;
+				else num -= 1;
+                
 				sb.append(num).append(" ");
 			}
 			sb.append("\n");
@@ -53,14 +54,11 @@ public class Main {
 		int[][] delta = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 		int[][] answer = new int[n][m];
 
-		for (int i = 0; i < n; i++) {
-			Arrays.fill(answer[i], Integer.MAX_VALUE);
-		}
 
 		Queue<Point> bfsQ = new LinkedList<>();
 
 		bfsQ.offer(start);
-		answer[start.x][start.y] = 0;
+		answer[start.x][start.y] = 1;
 
 		while (!bfsQ.isEmpty()) {
 			Point cur = bfsQ.poll();
@@ -69,7 +67,7 @@ public class Main {
 				int nextX = cur.x + dir[0];
 				int nextY = cur.y + dir[1];
 
-				if (0 <= nextX && nextX < n && 0 <= nextY && nextY < m && answer[nextX][nextY] > answer[cur.x][cur.y]+1 && board[nextX][nextY] != 0) {
+				if (0 <= nextX && nextX < n && 0 <= nextY && nextY < m && answer[nextX][nextY] == 0 && board[nextX][nextY] != 0) {
 					bfsQ.add(new Point(nextX, nextY));
 					answer[nextX][nextY] = answer[cur.x][cur.y]+1;
 				}
