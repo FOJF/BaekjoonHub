@@ -20,7 +20,7 @@ public class Main {
 		br.close();
 		// System.out.println(Arrays.deepToString(ways));
 
-		int[][] answer = new int[n][n];
+		boolean[][] answer = new boolean[n][n];
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
@@ -33,9 +33,9 @@ public class Main {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int[] arr : answer) {
-			for (int num : arr) {
-				sb.append(num).append(" ");
+		for (boolean[] arr : answer) {
+			for (boolean bool : arr) {
+				sb.append(bool?'1':'0').append(" ");
 			}
 			sb.append("\n");
 		}
@@ -43,7 +43,7 @@ public class Main {
 		System.out.println(sb);
 	}
 
-	public static int isPossible(boolean ways[][], int start, int end) {
+	public static boolean isPossible(boolean ways[][], int start, int end) {
 		// if (start == end) return 1;
 		// System.out.println("---------"+start+" "+end+"----------");
 		Queue<Integer> bfsQ = new LinkedList<>();
@@ -56,13 +56,13 @@ public class Main {
 			for (int i = 0; i < ways[vertex].length; i++) {
 					// System.out.println("way = " + ways[vertex][i] + ", " + "isVisited : " + isVisited[i]);
 				if (ways[vertex][i] && !isVisited[i]) {
-					if (i == end) return 1;
+					if (i == end) return true;
 					bfsQ.offer(i);
 					isVisited[i] = true;
 					// System.out.println(vertex + " -> " + i);
 				}
 			}
 		}
-		return 0;
+		return false;
 	}
 }
