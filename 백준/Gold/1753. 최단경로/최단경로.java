@@ -43,6 +43,8 @@ public class Main {
         while (!pq.isEmpty()) {
             int[] now = pq.poll();
 
+            if (dist[now[0]] > now[1]) continue;
+
             for (int[] next : list.get(now[0])) {
                 if (dist[next[0]] < now[1] + next[1]) continue;
 
