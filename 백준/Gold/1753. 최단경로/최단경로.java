@@ -1,65 +1,66 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
+    // 가독성을 위한 Node 클래스 정의
+    static class Node implements Comparable<Node> {
+        int idx, dist;
+        Node(int idx, int dist) {
+            this.idx = idx;
+            this.dist = dist;
+        }
+        public int compareTo(Node o) {
+            return Integer.compare(this.dist, o.dist);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
 
-        List<List<int[]>> list = new ArrayList<>();
-
-        for (int i = 0; i < V + 1; i++) {
-            list.add(new ArrayList<>());
+        List<List<Node>> graph = new ArrayList<>();
+        for (int i = 0; i <= V; i++) {
+            graph.add(new ArrayList<>());
         }
 
         int start = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            int distance = Integer.parseInt(st.nextToken());
-
-            list.get(x).add(new int[]{y, distance});
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            graph.get(u).add(new Node(v, w));
         }
-
-        br.close();
-
 
         int[] dist = new int[V + 1];
         Arrays.fill(dist, Integer.MAX_VALUE);
-
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
-
-        pq.add(new int[]{start, 0});
         dist[start] = 0;
 
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.offer(new Node(start, 0));
+
         while (!pq.isEmpty()) {
-            int[] now = pq.poll();
+            Node now = pq.poll();
 
-            if (dist[now[0]] < now[1]) continue;
+            // 이미 더 짧은 경로로 방문했다면 패스
+            if (dist[now.idx] < now.dist) continue;
 
-            for (int[] next : list.get(now[0])) {
-                if (dist[next[0]] < now[1] + next[1]) continue;
-
-                pq.offer(new int[]{next[0], now[1] + next[1]});
-                dist[next[0]] = now[1] + next[1];
+            for (Node next : graph.get(now.idx)) {
+                if (dist[next.idx] > now.dist + next.dist) {
+                    dist[next.idx] = now.dist + next.dist;
+                    pq.offer(new Node(next.idx, dist[next.idx]));
+                }
             }
         }
 
-//        System.out.println(Arrays.toString(dist));
-
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < V + 1; i++) {
-            sb.append(dist[i] == Integer.MAX_VALUE ? "INF" : dist[i]).append("\n");
+        for (int i = 1; i <= V; i++) {
+            sb.append(dist[i] == Integer.MAX_VALUE ? "INF" : dist[i]).append('\n');
         }
-
-        System.out.println(sb);
+        System.out.print(sb);
     }
 }
