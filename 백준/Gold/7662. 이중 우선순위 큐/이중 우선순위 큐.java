@@ -16,18 +16,13 @@ public class Main {
 				if (st.nextToken().charAt(0) == 'I') {
 					int num = Integer.parseInt(st.nextToken());
 					treeMap.put(num, treeMap.getOrDefault(num,0)+1);
-				} else if (st.nextToken().charAt(0) == '1'){
-					if (treeMap.isEmpty()) continue;
-					int key = treeMap.lastKey();
-					
-					treeMap.put(key, treeMap.get(key)-1);
-					if (treeMap.get(key) == 0) treeMap.pollLastEntry();
 				} else {
 					if (treeMap.isEmpty()) continue;
-					int key = treeMap.firstKey();
-					
+                    
+                    int key = st.nextToken().charAt(0) == '1' ? treeMap.lastKey() : treeMap.firstKey();
+                    
 					treeMap.put(key, treeMap.get(key)-1);
-					if (treeMap.get(key) == 0) treeMap.pollFirstEntry();
+					if (treeMap.get(key) == 0) treeMap.remove(key);
 				}
 			}
 			if (treeMap.isEmpty()) sb.append("EMPTY\n");
