@@ -18,6 +18,8 @@ public class Main {
     static int maxSafeAreaCount = 0;
     static int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
+    static int N, M;
+
     public static void main(String[] args) throws IOException {
         //인체에 치명적인 바이러스를 연구하던 연구소에서 바이러스가 유출되었다. 다행히 바이러스는 아직 퍼지지 않았고, 바이러스의 확산을 막기 위해서 연구소에 벽을 세우려고 한다.
         //
@@ -27,8 +29,8 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         grid = new int[N][M];
 
 
@@ -40,24 +42,25 @@ public class Main {
             }
         }
 
-        setWall(0);
+        setWall(0, 0);
 
         System.out.println(maxSafeAreaCount);
     }
 
-    public static void setWall(int wallCnt) {
+    public static void setWall(int wallCnt, int start) {
         if (wallCnt == 3) {
             maxSafeAreaCount = Math.max(maxSafeAreaCount, getSafeAreaCnt());
             return;
         }
 
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] == 0) {
-                    grid[i][j] = 1;
-                    setWall(wallCnt + 1);
-                    grid[i][j] = 0;
-                }
+        for (int i = start; i < N * M; i++) {
+            int r = i / M;
+            int c = i % M;
+
+            if (grid[r][c] == 0) {
+                grid[r][c] = 1;
+                setWall(wallCnt + 1, i + 1);
+                grid[r][c] = 0;
             }
         }
     }
