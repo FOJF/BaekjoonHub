@@ -2,40 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main (String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		int n = Integer.parseInt(br.readLine());
 
-		String[] input = br.readLine().split(" ");
+		int[] fruits = new int[n];
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		for (int i = 0; i < n; i++) {
+			fruits[i] = Integer.parseInt(st.nextToken());
+		}
 
 		br.close();
 
-		int[] tang = new int[input.length];
+		int[] check = new int[10];
 
-		for (int i = 0; i < input.length; i++) {
-			tang[i] = Integer.parseInt(input[i]);
+		int answer = 1;
+
+		int l = 0;
+		int r = 1;
+
+		check[fruits[l]]++;
+
+		while(l < r && r < n) {
+			check[fruits[r++]]++;
+
+			int fruitSorts = 0;
+
+			for(int i = 1; i < check.length; i++) {
+				if (check[i] == 0) continue;
+				fruitSorts++;				
+			}
+
+			if (fruitSorts <= 2) answer = Math.max(answer, r-l);
+			else check[fruits[l++]]--;
+
 		}
 
-		int max = 0;
-		HashMap<Integer, Integer> hashMap = new HashMap<>();
-
-		for (int i = 0; i < tang.length; i++) {
-			for (int j = i+max; j < tang.length; j++) {
-				hashMap.put(tang[j], hashMap.getOrDefault(tang[j], 0) + 1);
-
-				if (hashMap.size() <= 2) {
-					max = Math.max(max, j-i+1);
-				} else {
-					int v = hashMap.get(tang[i]);
-
-					if (v == 1) hashMap.remove(tang[i]);
-					else hashMap.put(tang[i], v-1);
-
-					break;
-				}
-			}	
-		}
-		System.out.println(max);
+		System.out.println(answer);
 	}
 }
