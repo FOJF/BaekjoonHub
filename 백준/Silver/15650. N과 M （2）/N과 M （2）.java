@@ -1,34 +1,38 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int n;
-	static int m;
-	static boolean[] isVisited;
+	static int N;
+	static int M;
+	static List<Integer> pickedNums = new ArrayList<>();
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		String[] input = br.readLine().split(" ");
-		n = Integer.parseInt(input[0]);
-		m = Integer.parseInt(input[1]);
-		br.close();
+		int[] NM = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		N = NM[0];
+		M = NM[1];
 
+		bt(1);
 
-		isVisited = new boolean[n];
-
-		f(1, 1, "");
+		System.out.println(sb);
 	}
 
-	static void f(int start, int depth, String answer) {
-		if (depth == m) {
-			for(int i = start; i <= n; i++) {
-				System.out.println(answer + i);
+	public static void bt (int start) {
+		if (pickedNums.size() == M) {
+			for(int num : pickedNums) {
+				sb.append(num).append(" ");
 			}
+			sb.append("\n");
+
 			return;
 		}
-		for(int i = start; i < n; i++) {
-			f(i+1, depth+1, answer + i + " ");
+
+		for(int i = start; i <= N; i++) {
+			pickedNums.add(i);
+			bt(i+1);
+			pickedNums.remove(pickedNums.size()-1);
 		}
 	}
 }
