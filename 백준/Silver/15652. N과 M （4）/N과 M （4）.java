@@ -1,24 +1,45 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
+
+	static List<Integer> picked = new ArrayList<>();
+	static StringBuilder sb = new StringBuilder();
+	static int n;
+	static int m;
+
+	public static void main (String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int[] nm = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		int[] NM = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
 		br.close();
 
-		getAnswer(1,0,nm[0],nm[1], "");
+		n = NM[0];
+		m = NM[1];
+
+		bt(1);
+
+		System.out.println(sb);
+
 	}
 
-	public static void getAnswer(int start, int depth, int n, int m, String s) {
-		if (depth == m) {
-			System.out.println(s);
+	public static void bt(int start) {
+		if (picked.size() == m) {
+			for(int i : picked) {
+				sb.append(i).append(" ");
+			}
+			sb.append("\n");
+
 			return;
 		}
+
 		for (int i = start; i <= n; i++) {
-			getAnswer(i, depth+1, n, m, s + i + " ");
+			picked.add(i);
+
+			bt(i);
+
+			picked.remove(picked.size()-1);
 		}
-	}	
+	}
 }
