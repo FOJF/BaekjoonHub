@@ -1,107 +1,67 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	static HashMap<Integer, TreeSet<Integer>> vertices = new HashMap<>();
-	static boolean[] dfsVisited;
+	static List<Set<Integer>> adj = new ArrayList<>();
+	static int[] visited;
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int[] nmv = strArr2intArr(br.readLine().split(" "));
+		int[] NMV = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-		int m = nmv[1];
+		visited = new int[NMV[0]+1];
 
-		for(int i = 0; i < m; i++) {
-			int[] vertexAB = strArr2intArr(br.readLine().split(" "));
-
-			addEdge(vertexAB[0],vertexAB[1]);
+		for(int i = 0; i < NMV[0]+1; i++) {
+			adj.add(new TreeSet<>());
 		}
-		dfsVisited = new boolean[vertices.size()+1];
 
-		dfs(nmv[2]);
-		System.out.println();
-		bfs(nmv[2]);
-	}
+		for(int i = 0; i < NMV[1]; i++) {
+			int[] edge = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-	private static void addEdge(int vertexA, int vertexB) {
-		TreeSet<Integer> hsA;
-		TreeSet<Integer> hsB;
-		
-		if (vertices.containsKey(vertexA)) hsA = vertices.get(vertexA);
-		else hsA = new TreeSet<>();
-		
-		if (vertices.containsKey(vertexB)) hsB = vertices.get(vertexB);
-		else hsB = new TreeSet<>();
-
-		hsA.add(vertexB);
-		hsB.add(vertexA);
-
-		vertices.put(vertexA, hsA);
-		vertices.put(vertexB, hsB);
-	}
-
-	private static int[] strArr2intArr(String[] strArr) {
-		int[] intArr = new int[strArr.length];
-		for(int i = 0; i < strArr.length; i++) {
-			intArr[i] = Integer.parseInt(strArr[i]);
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
 		}
-		return intArr;
-	}
 
-	private static void bfs(int startVertex) {
-		boolean[] isVisited = new boolean[1001];
+		br.close();
 
-		Queue<Integer> bfsQ = new LinkedList<>();
-		
-		bfsQ.add(startVertex);
+		//dfs
+		dfs(NMV[2]);
+		sb.append("\n");
 
-		while(!bfsQ.isEmpty()) {
-			int vertex = bfsQ.poll();
-			if(isVisited[vertex]) continue;
+		//bfs
+		Queue<Integer> q = new LinkedList<>();
 
-			isVisited[vertex] = true;
+		q.add(NMV[2]);
+		visited[NMV[2]] = 1;
+		sb.append(NMV[2]).append(" ");
 
-			System.out.print(vertex + " ");
+		while(!q.isEmpty()) {
+			int cur = q.poll();
 
-			if(!vertices.containsKey(vertex)) continue;
+			for(int next : adj.get(cur)) {
+				if (visited[next] == 1) continue;
 
-			TreeSet<Integer> linkedVertices = vertices.get(vertex);
-
-			for(Integer i : linkedVertices) {
-				if (isVisited[i]) continue;
-				
-				bfsQ.add(i);
+				q.add(next);
+				visited[next] = 1;
+				sb.append(next).append(" ");
 			}
 		}
 
+		sb.append("\n");
+
+		System.out.println(sb);
 	}
 
-	private static void dfs(int startVertex) {
-		boolean[] isVisited = new boolean[1001];
+	public static void dfs(int start) {
+		visited[start] = 2;
+		sb.append(start).append(" ");
 
-		Stack<Integer> dfsS = new Stack<>();
-		
-		dfsS.push(startVertex);
+		for(int next : adj.get(start)) {
+			if (visited[next] == 2) continue;
 
-		while(!dfsS.isEmpty()) {
-			int vertex = dfsS.pop();
-			if(isVisited[vertex]) continue;
-
-			isVisited[vertex] = true;
-
-			System.out.print(vertex + " ");
-
-			if(!vertices.containsKey(vertex)) continue;
-
-			NavigableSet<Integer> linkedVertices = vertices.get(vertex).descendingSet();
-
-			for(Integer i : linkedVertices) {
-				if (isVisited[i]) continue;
-				
-				dfsS.push(i);
-			}
+			dfs(next);
 		}
 	}
 }
