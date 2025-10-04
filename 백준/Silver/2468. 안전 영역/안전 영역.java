@@ -25,7 +25,6 @@ public class Main {
 
 		int answer = 1;
 
-
 		Queue<int[]> q = new LinkedList<>();
 
 		for(int h : heights) {
@@ -54,12 +53,10 @@ public class Main {
 						}
 					}
 
-					answer = Math.max(answer, safeArea);
 				}
 			}
-
+			answer = Math.max(answer, safeArea);
 		}
-
 
 		System.out.println(answer);
 	}
