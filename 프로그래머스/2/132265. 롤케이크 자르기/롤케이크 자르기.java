@@ -2,7 +2,7 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] topping) {
-        Map<Integer, Integer> older = new HashMap<>();
+        Set<Integer> older = new HashSet<>();
         Map<Integer, Integer> younger = new HashMap<>();
         
         int answer = 0;
@@ -11,7 +11,7 @@ class Solution {
         }
         
         for (int t : topping) {
-            older.put(t, older.getOrDefault(t, 0)+1);
+            older.add(t);
             younger.put(t, younger.get(t) - 1);
             
             if (younger.get(t) == 0) younger.remove(t);
