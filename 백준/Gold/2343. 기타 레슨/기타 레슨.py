@@ -2,7 +2,7 @@ N, M = map(int, input().split())
 
 lectures = list(map(int, input().split()))
 
-l, r = 1, 1000000000
+l, r = max(lectures), sum(lectures)
 answer = r
 
 while l <= r:
