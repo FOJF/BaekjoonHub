@@ -31,6 +31,7 @@ public class Main {
 		pq.add(new int[]{1, 0});
 		
 		int answer = 0;
+		int cnt = 0;
 
 		while(!pq.isEmpty()) {
 			int[] edge = pq.poll();
@@ -39,6 +40,7 @@ public class Main {
 
 			visited[edge[0]] = true;
 			answer += edge[1];
+			if (++cnt == V) break;
 
 			for(int[] e : adj.get(edge[0])) {
 				if (visited[e[0]]) continue;
