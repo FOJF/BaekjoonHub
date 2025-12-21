@@ -5,19 +5,25 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int[] VE = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int V = Integer.parseInt(st.nextToken());
+		int E = Integer.parseInt(st.nextToken());
 
-		boolean[] visited = new boolean[VE[0]+1];
+		boolean[] visited = new boolean[V+1];
 
 		List<List<int[]>> adj = new ArrayList<>();
-		for (int i = 0; i < VE[0]+1; i++) {
+		for (int i = 0; i < V+1; i++) {
 			adj.add(new ArrayList<>());
 		}
 
-		for (int i = 0; i < VE[1]; i++) {
-			int[] eInfo = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-			adj.get(eInfo[0]).add(new int[]{eInfo[1], eInfo[2]});
-			adj.get(eInfo[1]).add(new int[]{eInfo[0], eInfo[2]});
+		for (int i = 0; i < E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			
+			adj.get(s).add(new int[]{e, c});
+			adj.get(e).add(new int[]{s, c});
 		}
 
 		Queue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[1]-o2[1]);
@@ -35,7 +41,7 @@ public class Main {
 			answer += edge[1];
 
 			for(int[] e : adj.get(edge[0])) {
-                if (visited[e[0]]) continue;
+				if (visited[e[0]]) continue;
 				pq.add(e);
 			}
 		}
