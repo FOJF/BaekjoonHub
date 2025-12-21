@@ -35,6 +35,7 @@ public class Main {
 			answer += edge[1];
 
 			for(int[] e : adj.get(edge[0])) {
+                if (visited[e[0]]) continue;
 				pq.add(e);
 			}
 		}
