@@ -21,6 +21,6 @@ public class Main {
 			dp[1][2] = Integer.parseInt(st.nextToken()) + Math.min(dp[0][0], dp[0][1]);
 		}
 
-		System.out.println(Arrays.stream(dp[1]).min().getAsInt());
+		System.out.println(Math.min(Math.min(dp[1][0], dp[1][1]), dp[1][2]));
 	}
 }
