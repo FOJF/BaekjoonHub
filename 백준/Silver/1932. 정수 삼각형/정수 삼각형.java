@@ -1,5 +1,5 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -7,24 +7,26 @@ public class Main {
 
 		int n = Integer.parseInt(br.readLine());
 
-		int[][] triangle = new int[n][];
+		int[][] dp = new int[2][n];
 
-		for (int i = 0; i < triangle.length; i++) {
-			triangle[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-		}
+		for(int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
 
-		br.close();
+			int[] tmp = dp[0];
+			dp[0] = dp[1];
+			dp[1] = tmp;
 
-		// System.out.println(Arrays.deepToString(triangle));
+			for(int j = 0; j <= i; j++) {
+				int max = 0;
+				
+				if (j == 0) max = dp[0][0];
+				else if (j == i) max = dp[0][j-1];
+				else max = Math.max(dp[0][j-1], dp[0][j]);
 
-		for (int i = triangle.length-1; i > 0; i--) {
-			for (int j = 0; j < triangle[i].length-1; j++) {
-				//System.out.println(triangle[i-1][j] + " " + Math.max(triangle[i][j], triangle[i][j+1]));
-				triangle[i-1][j] += Math.max(triangle[i][j], triangle[i][j+1]);
+				dp[1][j] = Integer.parseInt(st.nextToken()) + max;
 			}
 		}
 
-		System.out.println(triangle[0][0]);
-
+		System.out.println(Arrays.stream(dp[1]).max().getAsInt());
 	}
 }
