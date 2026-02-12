@@ -2,6 +2,9 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+
+	static int[] heads;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -10,66 +13,60 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 
-		Set<Integer> truth = new HashSet<>();
+		heads = new int[N+1];
 
-		List<Set<Integer>> adj = new ArrayList<>();
-
-		for(int i = 0; i < N+1; i++) {
-			adj.add(new HashSet<>());
+		for(int i = 1; i < heads.length; i++) {
+			heads[i] = i;
 		}
-
-		List<Set<Integer>> party = new ArrayList<>();
 
 		st = new StringTokenizer(br.readLine());
-
-		int t = Integer.parseInt(st.nextToken());
+		int tCnt = Integer.parseInt(st.nextToken());
 		
-		Queue<Integer> bfsQ = new LinkedList<>();
-		for(int i = 0; i < t; i++) {
-			int tr = Integer.parseInt(st.nextToken());
-			bfsQ.add(tr);
-			truth.add(tr);
+		int[] truths = new int[tCnt];
+		for(int i = 0; i < tCnt; i++) {
+			truths[i] = Integer.parseInt(st.nextToken());
 		}
 
+		int[] hosts = new int[M];
 
 		for(int i = 0; i < M; i++) {
-			Set<Integer> p = new HashSet<>();
-
 			st = new StringTokenizer(br.readLine());
+			int pCnt = Integer.parseInt(st.nextToken());
+			hosts[i] = Integer.parseInt(st.nextToken());
 
-			int att = Integer.parseInt(st.nextToken());
-			for (int j = 0; j < att; j++) {
-				p.add(Integer.parseInt(st.nextToken()));
-			}
-
-			party.add(p);
-
-			for(int n : p) {
-				Set<Integer> s = adj.get(n);
-				for(int nn : p) {
-					if (n != nn)
-						s.add(nn);
-				}
+			for(int j = 0; j < pCnt-1; j++) {
+				union(hosts[i], Integer.parseInt(st.nextToken()));
 			}
 		}
 
-		while(!bfsQ.isEmpty()) {
-			int now = bfsQ.poll();
+		Set<Integer> truthHeads = new HashSet<>();
 
-			for(int next : adj.get(now)) {
-				if (truth.contains(next)) continue;
-
-				bfsQ.add(next);
-				truth.add(next);
-			}
+		for (int t : truths) {
+			truthHeads.add(find(t));
 		}
 
-		int cnt = 0;
-		for(Set ppp : party) {
-			if (ppp.removeAll(truth)) cnt++;
+		int answer = 0;
+		for(int i = 0; i < hosts.length; i++) {
+			if (!truthHeads.contains(find(hosts[i]))) answer++;
 		}
 
-		System.out.println(M-cnt);
+		System.out.println(answer);
 	}
 
+	public static int find(int num) {
+		if (num == heads[num]) return num;
+
+		return heads[num] = find(heads[num]);
+	}
+
+	public static void union(int a, int b) {
+		int headA = find(a);
+		int headB = find(b);
+
+		if (headA < headB) {
+			heads[headB] = headA;
+		} else {
+			heads[headA] = headB;
+		}
+	}
 }
