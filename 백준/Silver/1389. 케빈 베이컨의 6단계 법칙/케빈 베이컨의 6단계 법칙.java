@@ -1,65 +1,60 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	static HashMap<Integer, HashSet<Integer>> hashMap = new HashMap<>();
-
-	public static void main (String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] input = br.readLine().split(" ");
-		int n = Integer.parseInt(input[0]);
-		int m = Integer.parseInt(input[1]);
 
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		for (int i = 0; i < m; i++) {
-			input = br.readLine().split(" ");
-			addEdge(Integer.parseInt(input[0]), Integer.parseInt(input[1]));
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+
+		List<List<Integer>> adjList = new ArrayList<>();
+
+		for(int i = 0; i < N+1; i++) {
+			adjList.add(new ArrayList<>());
 		}
 
-		br.close();
-
-		int minIdx = 1;
-		int minVal = getKevinBaconCnt(1);
-		for (int i = 2; i <= n; i++) {
-			int cntKB = getKevinBaconCnt(i);
-			if (minVal > cntKB) {
-				minVal = cntKB;
-				minIdx = i;
-			}
+		for(int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
+			adjList.get(a).add(b);
+			adjList.get(b).add(a);
 		}
-
-		System.out.println(minIdx);
-	}
-
-	public static void addEdge(int v1, int v2) {
-        hashMap.computeIfAbsent(v1, k -> new HashSet<>()).add(v2);
-        hashMap.computeIfAbsent(v2, k -> new HashSet<>()).add(v1);
-	}
-
-
-	public static int getKevinBaconCnt (int start) {
-		int[] distances = new int[hashMap.size()];
-		Arrays.fill(distances, Integer.MAX_VALUE);
-		int kevinBaconCnt = 0;
 
 		Queue<Integer> bfsQ = new LinkedList<>();
-		bfsQ.add(start);
-		distances[start-1] = 0;
-		while(!bfsQ.isEmpty()) {
-			int cur = bfsQ.poll();
-			for(int i : hashMap.get(cur)) {
-				if (distances[i-1] > distances[cur-1]+1) {
-					bfsQ.add(i);
-					distances[i-1] = distances[cur-1]+1;
+
+		int answerIdx = 1;
+		int answerVal = Integer.MAX_VALUE;
+
+		for(int i = 1; i <= N; i++) {
+			int[] visited = new int[N+1];
+			bfsQ.add(i);
+			visited[i] = 1;
+
+			while(!bfsQ.isEmpty()) {
+				int cur = bfsQ.poll();
+
+				for(int next : adjList.get(cur)) {
+					if (visited[next] != 0) continue;
+
+					bfsQ.add(next);
+					visited[next] = visited[cur] + 1;
 				}
+			}
+
+			int kbCnt = Arrays.stream(visited).sum();
+
+			if (answerVal > kbCnt) {
+				answerVal = kbCnt;
+				answerIdx = i;
 			}
 		}
 
-		for (int i : distances) {
-			kevinBaconCnt += i;
-		}
-
-		return kevinBaconCnt;
+		System.out.println(answerIdx);
 	}
-
 }
