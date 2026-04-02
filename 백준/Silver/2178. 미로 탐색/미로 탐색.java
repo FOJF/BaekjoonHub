@@ -1,75 +1,50 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	public static class Point {
-        private int x;
-        private int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        int getX() {
-            return this.x;
-        }
-
-        int getY() {
-            return this.y;
-        }
-    }
-
-	public static void main (String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		String[] input = br.readLine().split(" ");
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int n = Integer.parseInt(input[0]);
-		int m = Integer.parseInt(input[1]);
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
 
-		int[][] board = new int[n][m];
+		boolean[][] grid = new boolean[N][M];
+		int[][] dist = new int[N][M];
 
-		for (int i = 0; i < n; i++) {
-			input = br.readLine().split("");
-			for (int j = 0; j < m; j++) {
-				board[i][j] = Integer.parseInt(input[j]);
+		for(int i = 0; i < N; i++) {
+			char[] c = br.readLine().toCharArray();
+			for(int j = 0; j < c.length; j++) {
+				grid[i][j] = c[j] == '1';
 			}
 		}
-		br.close();
 
+		Queue<int[]> bfsQ = new LinkedList<>();
 
+		bfsQ.add(new int[]{0,0});
+		dist[0][0] = 1;
 
-		System.out.println(findExit(board));
-	}
-
-	public static int findExit(int[][] board) {
-		int[][] delta = {{1,0},{-1,0},{0,1},{0,-1}};
-
-		int[][] distance = new int[board.length][board[0].length];
-		for (int [] arr : distance)
-		Arrays.fill(arr, Integer.MAX_VALUE);
-		
-		Queue<Point> bfsQ = new LinkedList<>();
-
-		bfsQ.add(new Point(0,0));
-		distance[0][0] = 1;
+		int[][] delta = {{1,0}, {0,1}, {-1,0}, {0,-1}};
 
 		while(!bfsQ.isEmpty()) {
-			Point cur = bfsQ.poll();
+			int[] cur = bfsQ.poll();
 
-			for (int[] dir : delta) {
-				int nextX = cur.getX() + dir[0];
-				int nextY = cur.getY() + dir[1];
-				if (0 <= nextX && nextX < board.length && 0 <= nextY && nextY < board[0].length && board[cur.getX()][cur.getY()] != 0
-				 &&
-				 distance[nextX][nextY] > distance[cur.getX()][cur.getY()]+1) {
-					bfsQ.add(new Point(nextX, nextY));
-					distance[nextX][nextY] = distance[cur.getX()][cur.getY()]+1;
+			for(int[] dir : delta) {
+				int nX = cur[0] + dir[0];
+				int nY = cur[1] + dir[1];
+
+				if (0 <= nX && nX < N && 0 <= nY && nY < M && dist[nX][nY] == 0 && grid[nX][nY]) {
+					dist[nX][nY] = dist[cur[0]][cur[1]] + 1;
+					bfsQ.add(new int[]{nX, nY});
+				}
+
+				if (nX == N-1 && nY == M-1) {
+					System.out.println(dist[nX][nY]);
+					return;
 				}
 			}
 		}
 
-		return distance[distance.length-1][distance[0].length-1];
 	}
 }
