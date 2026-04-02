@@ -1,48 +1,46 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int[] distance = new int[100001];
-	public static void main (String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		String[] input = br.readLine().split(" ");
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		br.close();
+		int N = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
 
-		int n = Integer.parseInt(input[0]);
-		int k = Integer.parseInt(input[1]);
-
-		System.out.println(bfs(n,k));
-	}
-
-	public static int bfs(int start, int target) {
-		if (start == target) return 0;
-		Queue<Integer> q = new LinkedList<>();
-
-		q.add(start);
-		distance[start] = 1;
-
-		while(!q.isEmpty()) {
-			int cur = q.poll();
-
-			if (cur+1 == target || cur-1 == target || cur*2 == target)
-				return distance[cur];
-
-			if (0 <= cur+1 && cur+1 <= 100000 && distance[cur+1] == 0) {
-				q.add(cur+1);
-				distance[cur+1] = distance[cur]+1;
-			}
-			if (0 <= cur-1 && cur-1 <= 100000 && distance[cur-1] == 0) {
-				q.add(cur-1);
-				distance[cur-1] = distance[cur]+1;
-			}
-			if (0 <= cur*2 && cur*2 <= 100000 && distance[cur*2] == 0) {
-				q.add(cur*2);
-				distance[cur*2] = distance[cur]+1;
-			}
+		if (N == K) {
+			System.out.println(0);
+			return;
 		}
 
-		return -1;
+		final int MIN_P = 0;
+		final int MAX_P = 100000;
+
+		Queue<Integer> bfsQ = new LinkedList<>();
+
+		int[] dist = new int[MAX_P+1];
+
+		bfsQ.add(N);
+		dist[N] = 1;
+
+		while(!bfsQ.isEmpty()) {
+			int cur = bfsQ.poll();
+
+			int[] nexts = {cur-1, cur+1, cur*2};
+
+			for(int next : nexts) {
+				if (next == K) {
+					System.out.println(dist[cur]);
+					return;
+				}
+
+				if (MIN_P <= next && next <= MAX_P && dist[next] == 0) {
+					bfsQ.add(next);
+					dist[next] = dist[cur]+1;
+				}
+			}
+		}
 	}
 }
