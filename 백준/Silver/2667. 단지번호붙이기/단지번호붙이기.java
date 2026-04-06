@@ -1,86 +1,65 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-	public static class Point {
-		int x;
-		int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public int getX() {
-			return this.x;
-		}
-
-		public int getY() {
-			return this.y;
-		}
-	}
-	public static void main (String[] args) throws IOException {
+public class Main{
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
 
-		boolean[][] isVisited = new boolean[n][n];
+		int N = Integer.parseInt(br.readLine());
 
-		for (int i = 0; i < n; i++) {
-			String[] input = br.readLine().split("");
-			for (int j = 0; j < n; j++) {
-				isVisited[i][j] = input[j].equals("0");
+		boolean[][] grid = new boolean[N][N];
+		boolean[][] visited = new boolean[N][N];
+
+		for(int i = 0; i < N; i++) {
+			String s = br.readLine();
+			for (int j = 0; j < N; j++) {
+    			grid[i][j] = (s.charAt(j) == '1');
 			}
 		}
 
-		br.close();
+		int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+		Queue<int[]> bfsQ = new LinkedList<>();
 
-		// System.out.println(Arrays.deepToString(isVisited));
-		int count = 0;
-		List<Integer> aptCnts = new ArrayList<>();
+		List<Integer> answer = new ArrayList<>();
 
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (isVisited[i][j]) continue;
+		for(int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (!grid[i][j] || visited[i][j]) continue;
 
-				
-					count++;
-					aptCnts.add(getApartmentCnt(isVisited, new Point(i,j)));
-				
-			}
-		}
-		System.out.println(count);
-		Collections.sort(aptCnts);
+				bfsQ.add(new int[]{i,j});
+				visited[i][j] = true;
 
-		for (int cnt : aptCnts) {
-			System.out.println(cnt);
-		}
-	}
+				int cnt = 1;
 
-	public static int getApartmentCnt (boolean[][] isVisited, Point startPoint) {
-		int n = isVisited.length;
-		int[][] delta = {{1,0},{-1,0},{0,1},{0,-1}};
+				while(!bfsQ.isEmpty()) {
+					int[] cur = bfsQ.poll();
 
-		Queue<Point> bfsQ = new LinkedList<>();
+					for(int[] dir : delta) {
+						int nX = cur[0] + dir[0];
+						int nY = cur[1] + dir[1];
 
-		bfsQ.add(startPoint);
-		isVisited[startPoint.getX()][startPoint.getY()] = true;
-
-		int cnt = 0;
-		while(!bfsQ.isEmpty()) {
-			Point cur = bfsQ.poll();
-			cnt++;
-
-			for (int[] dir : delta) {
-				int nextX = cur.getX() + dir[0];
-				int nextY = cur.getY() + dir[1];
-
-				if (0 <= nextX && nextX < n && 0 <= nextY && nextY < n && !isVisited[nextX][nextY]) {
-					bfsQ.add(new Point(nextX, nextY));
-					isVisited[nextX][nextY] = true;
+						if (0 <= nX && nX < N && 0 <= nY && nY < N && grid[nX][nY] && !visited[nX][nY]) {
+							bfsQ.add(new int[]{nX, nY});
+							visited[nX][nY] = true;
+							cnt++;
+						}
+					}
 				}
+
+				answer.add(cnt);
 			}
 		}
 
-		return cnt;
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(answer.size()).append("\n");
+
+		answer.sort((a,b) -> a-b);
+
+		for(int a : answer) {
+			sb.append(a).append("\n");
+		}
+
+		System.out.println(sb);
 	}
 }
