@@ -1,46 +1,34 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-public class Main {
-	public static void main (String[] args) throws IOException {
+public class Main{
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		int m = Integer.parseInt(br.readLine());
-		String s = br.readLine();
-		br.close();
 
-		System.out.println(getCnt(s,n));
-	}
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
 
-	public static int getCnt(String s, int n) {
-		StringBuilder sb = new StringBuilder();
-		int total = 0;
+		char[] S = br.readLine().toCharArray();
 
-		for (int i = 0; i < n; i++) {
-			sb.append("IO");
-		}
-		sb.append("I");
+		int answer = 0;
 
-		String original = sb.toString();
+		int cnt = 0;
 
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) != 'I') continue;
+		int continuousIOI = 0;
 
-			int cnt = 0;
-			
-			if (!s.startsWith(original, i)) continue;
-
-			for (int j = i + original.length(); j+2 <= s.length(); j += 2) {
-				if (s.charAt(j) == 'O' && s.charAt(j+1) == 'I') {
-                     cnt++;
-                     i += 2;
-                }
-				else {break;}
+		for(int i = 0; i < M; i++) {
+			if (S[i] == 'I') {
+				if (i+2 < M && S[i+1] == 'O' && S[i+2] == 'I') {
+					continuousIOI++;
+					i++;
+				} else {
+					// System.out.println(i + " : " + continuousIOI);
+					if (continuousIOI >= N) answer += continuousIOI-N+1;
+					continuousIOI = 0;
+				}
 			}
-	i += original.length()-1;
-			total += (cnt + 1);
 		}
 
-		return total;
+		System.out.println(answer);
 	}
 }
