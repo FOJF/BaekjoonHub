@@ -12,8 +12,6 @@ public class Main{
 
 		int answer = 0;
 
-		int cnt = 0;
-
 		int continuousIOI = 0;
 
 		for(int i = 0; i < M; i++) {
@@ -22,7 +20,6 @@ public class Main{
 					continuousIOI++;
 					i++;
 				} else {
-					// System.out.println(i + " : " + continuousIOI);
 					if (continuousIOI >= N) answer += continuousIOI-N+1;
 					continuousIOI = 0;
 				}
