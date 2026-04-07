@@ -30,7 +30,7 @@ public class Main {
 		}
 
 		int[][] delta = {{1,0}, {-1,0}, {0,1}, {0,-1}};
-		Queue<int[]> bfsQ = new LinkedList<>();
+		Queue<int[]> bfsQ = new ArrayDeque<>();
 
 		bfsQ.add(start);
 		dist[start[0]][start[1]] = 1;
