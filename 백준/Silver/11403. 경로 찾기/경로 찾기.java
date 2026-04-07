@@ -2,39 +2,50 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 
-        boolean[][] ways = new boolean[n][n];
+		List<List<Integer>> adjList = new ArrayList<>();
 
-        // 인접 행렬 입력
-        for (int i = 0; i < n; i++) {
-            String[] input = br.readLine().split(" ");
-            for (int j = 0; j < n; j++) {
-                ways[i][j] = input[j].equals("1");
-            }
-        }
+		for(int i = 0; i < N; i++) {
+			List<Integer> l = new ArrayList<>();
+			String s = br.readLine();
+			for(int j = 0; j < N; j++) {
+				if (s.charAt(j*2) == '1') {
+					l.add(j);
+				}
+			}
+			adjList.add(l);
+		}
 
-        // 플로이드-워셜 알고리즘
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (ways[i][k] && ways[k][j]) {
-                        ways[i][j] = true;
-                    }
-                }
-            }
-        }
+		boolean[][] answer = new boolean[N][N];
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                sb.append(ways[i][j] ? "1 " : "0 ");
-            }
-            sb.append("\n");
-        }
-        System.out.print(sb);
-    }
+		Queue<Integer> bfsQ = new ArrayDeque<>();
+
+		for(int i = 0; i < N; i++) {
+			bfsQ.add(i);
+			while(!bfsQ.isEmpty()) {
+				int cur = bfsQ.poll();
+
+				for(int next : adjList.get(cur)) {
+					if (answer[i][next]) continue;
+
+					bfsQ.add(next);
+					answer[i][next] = true;
+				}
+			}
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for(boolean[] ans : answer) {
+			for(boolean a : ans) {
+				sb.append(a ? 1 : 0).append(" ");
+			}
+			sb.append("\n");
+		}
+
+		System.out.println(sb);
+	}
 }
