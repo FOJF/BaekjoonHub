@@ -2,77 +2,62 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static class Point {
-		public int x;
-		public int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-
-	static int n;
-	static int m;
-	static int[][] board;
-	public static void main (String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] input = br.readLine().split(" ");
-		n = Integer.parseInt(input[0]);
-		m = Integer.parseInt(input[1]);
 
-		board = new int[n][m];
-		Point start = null;
-		for (int i = 0; i < n; i++) {
-			input = br.readLine().split(" ");
-			for (int j = 0; j < m; j++) {
-				board[i][j] = Integer.parseInt(input[j]);
-				if (board[i][j] == 2) start = new Point(i,j);
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+
+		boolean[][] grid = new boolean[n][m];
+		int[][] dist = new int[n][m];
+		int[] start = { -1, -1 };
+
+		for(int i = 0; i < n; i++) {
+			String s = br.readLine();
+			for(int j = 0; j < m; j++) {
+				char c = s.charAt(j * 2);
+				grid[i][j] = (c != '0');
+
+				if (c == '2') {
+					start[0] = i;
+					start[1] = j;
+				} else if (c == '0') {
+					dist[i][j] = 1;
+				}
 			}
 		}
-		br.close();
 
-		int[][] distanceBoard = getDistanceBoard(start);
+		int[][] delta = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+		Queue<int[]> bfsQ = new LinkedList<>();
+
+		bfsQ.add(start);
+		dist[start[0]][start[1]] = 1;
+
+		while(!bfsQ.isEmpty()) {
+			int[] cur = bfsQ.poll();
+
+			for(int[] dir : delta) {
+				int nX = dir[0] + cur[0];
+				int nY = dir[1] + cur[1];
+
+				if (0 <= nX && nX < n && 0 <= nY && nY < m && grid[nX][nY] && dist[nX][nY] == 0) {
+					bfsQ.add(new int[]{nX, nY});
+					dist[nX][nY] = dist[cur[0]][cur[1]] + 1;
+				}
+			}
+		}
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				int num = distanceBoard[i][j];
-				if (board[i][j] == 0) num = 0;
-				else if (num == 0) num = -1;
-				else num -= 1;
-                
-				sb.append(num).append(" ");
+
+		for(int[] dis : dist) {
+			for(int d : dis) {
+				sb.append(d-1).append(" ");
 			}
 			sb.append("\n");
 		}
 
 		System.out.println(sb);
-	}
-
-	public static int[][] getDistanceBoard(Point start) {
-		int[][] delta = {{1,0}, {-1,0}, {0,1}, {0,-1}};
-		int[][] answer = new int[n][m];
-
-
-		Queue<Point> bfsQ = new LinkedList<>();
-
-		bfsQ.offer(start);
-		answer[start.x][start.y] = 1;
-
-		while (!bfsQ.isEmpty()) {
-			Point cur = bfsQ.poll();
-
-			for (int[] dir : delta) {
-				int nextX = cur.x + dir[0];
-				int nextY = cur.y + dir[1];
-
-				if (0 <= nextX && nextX < n && 0 <= nextY && nextY < m && answer[nextX][nextY] == 0 && board[nextX][nextY] != 0) {
-					bfsQ.add(new Point(nextX, nextY));
-					answer[nextX][nextY] = answer[cur.x][cur.y]+1;
-				}
-			}
-		}
-		return answer;
 	}
 }
