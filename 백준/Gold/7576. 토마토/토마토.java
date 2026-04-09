@@ -2,73 +2,57 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static class Point {
-		int x, y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-
-	static Queue<Point> bfsQ = new LinkedList<>();
-	
-	static int m;
-	static int n;
-
-	static int[][] tray;
-	static boolean[][] isVisited;
-
 	public static void main (String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        m = Integer.parseInt(st.nextToken());
-		n = Integer.parseInt(st.nextToken());
-		
-        tray = new int[n][m];
-		isVisited = new boolean[n][m];
-        
-		for (int i = 0; i < tray.length; i++) {
+		int m = Integer.parseInt(st.nextToken());
+		int n = Integer.parseInt(st.nextToken());
+
+		int[][] box = new int[n][m];
+
+		int cnt = n*m;
+
+		Queue<int[]> bfsQ = new ArrayDeque<>();
+
+		for (int i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < tray[i].length; j++) {
-                int tomato = Integer.parseInt(st.nextToken());
-				if (tomato == 1) bfsQ.add(new Point(i,j));
-				tray[i][j] = tomato;
+			// System.out.println(st);
+			for (int j = 0; j < m; j++) {
+				int a = Integer.parseInt(st.nextToken());
+				if (a == 0) continue;
+
+				if (a == 1) {
+					bfsQ.add(new int[]{i,j});
+				}
+
+				box[i][j] = a;
+				cnt--;
 			}
 		}
-		br.close();
 
-		bfs();
 
-		int max = 0;
-		for (int i = 0; i < tray.length; i++) {
-			for (int j = 0; j < tray[i].length; j++) {
-				if (tray[i][j] == 0) {System.out.println("-1"); return;}
-				max = Math.max(max, tray[i][j]);
-			}
-		}
-		System.out.println(max-1);
-	}
-
-	public static void bfs() {
 		int[][] delta = {{1,0},{-1,0},{0,1},{0,-1}};
+
+		int answer = 0;
+
 		while(!bfsQ.isEmpty()) {
-			Point cur = bfsQ.poll();
+			int[] cur = bfsQ.poll();
 
 			for (int[] dir : delta) {
-				int nextX = cur.x + dir[0];
-				int nextY = cur.y + dir[1];
-				if (isValidIdx(nextX,nextY)) {
-					bfsQ.add(new Point(nextX, nextY));
-					tray[nextX][nextY] = tray[cur.x][cur.y]+1;
+				int nX = cur[0] + dir[0];
+				int nY = cur[1] + dir[1];
+
+				if (0<=nX && nX<n && 0<=nY && nY<m && box[nX][nY]==0) {
+					bfsQ.add(new int[]{nX,nY});
+					box[nX][nY] = box[cur[0]][cur[1]] + 1;
+					answer = Math.max(answer, box[nX][nY]-1);
+					cnt--;
 				}
 			}
 		}
-	}
 
-	public static boolean isValidIdx(int x, int y) {
-		return (0 <= x && x < n) && (0 <= y && y < m) && tray[x][y]==0;
+		System.out.println(cnt > 0 ? -1 : answer);
 	}
 }
