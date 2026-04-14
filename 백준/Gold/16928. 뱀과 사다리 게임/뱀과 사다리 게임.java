@@ -2,51 +2,43 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		int t = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).sum();
 
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+		Map<Integer, Integer> m = new HashMap<>();
 
-        int[] isVisited = new int[107];
+		while(t-- > 0) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			m.put(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+		}
 
-        int[] board = new int[107];
-        Arrays.setAll(board, i -> i);
+		Queue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
+			if (o1[1] == o2[1]) return o1[0]-o2[0];
+			return o1[1]-o2[1];
+		});
 
+		boolean[] visited = new boolean[101];
+		pq.add(new int[]{1, 0});
+		visited[1] = true;
 
-        for (int i = 0; i < n + m; i++) {
-            st = new StringTokenizer(br.readLine());
-            board[Integer.parseInt(st.nextToken())] = Integer.parseInt(st.nextToken());
-        }
+		while(!pq.isEmpty()) {
+			int[] cur = pq.poll();
 
-        br.close();
+			for(int i = 1; i <= 6; i++) {
+				int[] next = {m.getOrDefault(cur[0]+i, cur[0]+i), cur[1]+1};
 
-        int[] delta = {1, 2, 3, 4, 5, 6};
+				if (next[0] > 100 || visited[next[0]]) continue;
 
-        Queue<Integer> bfsQ = new LinkedList<>();
+				if (next[0] == 100) {
+					System.out.println(next[1]);
+					return;
+				}
 
-        bfsQ.add(1);
-        isVisited[1] = 0;
-
-        while (!bfsQ.isEmpty()) {
-            int now = bfsQ.poll();
-
-            for (int dir : delta) {
-                int realNext = board[now + dir];
-
-                if (realNext == 100) {
-                    System.out.println(isVisited[now] + 1);
-                    return;
-                }
-
-                if (isVisited[realNext] == 0) {
-                    bfsQ.add(realNext);
-                    isVisited[realNext] = isVisited[now] + 1;
-
-                }
-            }
-        }
-    }
+				pq.add(next);
+                visited[next[0]] = true;
+			}
+		}
+	}
 }
