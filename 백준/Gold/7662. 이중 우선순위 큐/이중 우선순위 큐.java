@@ -25,9 +25,13 @@ public class Main {
 					boolean c = st.nextToken().charAt(0) == '1';
 					int key = c ? treeMap.lastKey() : treeMap.firstKey();
 
-					treeMap.put(key, treeMap.get(key)-1);
-					if (treeMap.get(key) == 0) 
-						treeMap.remove(key);
+					int count = treeMap.get(key); 
+
+                    if (count == 1) {
+                        treeMap.remove(key);
+                    } else {
+                        treeMap.put(key, count - 1);
+                    }
 				}
 			}
 
