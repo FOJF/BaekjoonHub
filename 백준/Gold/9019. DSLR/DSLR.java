@@ -2,82 +2,57 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	static final int MAX_VALUE = 10000;
+	static final char[] CMD = { 'D', 'S', 'L', 'R' };
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int n = Integer.parseInt(br.readLine());
+		int T = Integer.parseInt(br.readLine());
+
+		Queue<Integer> bfsQ = new ArrayDeque<>();
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < n; i++) {
+		while(T-- > 0) {
+			int[] visited = new int[MAX_VALUE];
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
 
-			// System.out.println("----------");
-			// System.out.println(a);
-			// System.out.println(d(a));
-			// System.out.println(s(a));
-			// System.out.println(l(a));
-			// System.out.println(r(a));
+			int A = Integer.parseInt(st.nextToken());
+			int B = Integer.parseInt(st.nextToken());
 
+			bfsQ.add(A);
+			visited[A] = -1;
 
-			sb.append(bfs(a, b)).append("\n");
-		}
+			while(!bfsQ.isEmpty()) {
+				int cur = bfsQ.poll();
 
-		System.out.println(sb);
-		br.close();
-	}
-
-	public static String bfs(int start, int target) {
-		Queue<Integer> bfsQ = new LinkedList<>();
-		String[] tried = new String[10000];
-
-		bfsQ.add(start);
-		tried[start] = "";
-
-		while(!bfsQ.isEmpty()) {
-			int now = bfsQ.poll();
-			// System.out.println(now);
-			for (int i = 0; i < 4; i++) {
-				int next = 0;
-				String cmd = null;
-				switch(i) {
-					case 0 -> {next =d(now); cmd = "D";}
-					case 1 -> {next =s(now); cmd = "S";}
-					case 2 -> {next =l(now); cmd = "L";}
-					case 3 -> {next =r(now); cmd = "R";}
+				if (cur == B) {
+					bfsQ.clear();
+					int r = B;
+					StringBuilder ssb = new StringBuilder();
+					while(visited[r] != -1) {
+						ssb.append(CMD[visited[r]%10]);
+						r = visited[r]/10;
+					}
+					sb.append(ssb.reverse()).append("\n");
+					break;
 				}
 
-				if (next == target) return tried[now] + cmd;
+				int[] next = {
+					(cur << 1) % MAX_VALUE,
+					cur==0 ? MAX_VALUE-1 : cur-1,
+					cur/(MAX_VALUE/10) + cur%(MAX_VALUE/10)*10,
+					cur%10*(MAX_VALUE/10) + cur/10
+				};
 
-				if (tried[next] == null) {
-					bfsQ.add(next);
-					tried[next] = tried[now] + cmd;
+				for(int i = 0; i < next.length; i++) {
+					if (visited[next[i]] != 0) continue;
+
+					bfsQ.add(next[i]);
+					visited[next[i]] = cur*10 + i;
 				}
 			}
-		}		
-		return "";
+		}
+		System.out.println(sb);
 	}
-
-	public static int d(int num) {
-		return num * 2 % 10000;
-	}
-
-	public static int s(int num) {
-		return num == 0 ? 9999 : num-1;
-	}
-
-	public static int l(int num) {
-		int count = 0;
-		return num/1000 + num%1000*10;
-	}
-
-	public static int r(int num) {
-		return num%10*1000 + num/10;
-	}
-
-	/*
-	1234 - > 2341
-*/
 }
