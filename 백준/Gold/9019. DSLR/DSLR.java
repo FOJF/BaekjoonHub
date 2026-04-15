@@ -38,19 +38,29 @@ public class Main {
 					break;
 				}
 
-				int[] next = {
-					(cur << 1) % MAX_VALUE,
-					cur==0 ? MAX_VALUE-1 : cur-1,
-					cur/(MAX_VALUE/10) + cur%(MAX_VALUE/10)*10,
-					cur%10*(MAX_VALUE/10) + cur/10
-				};
+                int d = (cur << 1) % MAX_VALUE;
+                if (visited[d] == 0) {
+                    visited[d] = cur * 10 + 0;
+                    bfsQ.add(d);
+                }
 
-				for(int i = 0; i < next.length; i++) {
-					if (visited[next[i]] != 0) continue;
+                int s = cur == 0 ? MAX_VALUE - 1 : cur - 1;
+                if (visited[s] == 0) {
+                    visited[s] = cur * 10 + 1;
+                    bfsQ.add(s);
+                }
 
-					bfsQ.add(next[i]);
-					visited[next[i]] = cur*10 + i;
-				}
+                int l = cur / 1000 + (cur % 1000) * 10;
+                if (visited[l] == 0) {
+                    visited[l] = cur * 10 + 2;
+                    bfsQ.add(l);
+                }
+
+                int r = (cur % 10) * 1000 + cur / 10;
+                if (visited[r] == 0) {
+                    visited[r] = cur * 10 + 3;
+                    bfsQ.add(r);
+                }
 			}
 		}
 		System.out.println(sb);
