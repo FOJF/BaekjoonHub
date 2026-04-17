@@ -1,77 +1,93 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int n;
-    static int m;
-    static int[][] board;
-    final static int TETRO_SIZE = 4;
 
-    static boolean[][] isVisited;
-    static int max = 0;
-    static int sum = 0;
-    static int count = 0;
+    static int[][] nemo = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+    static int[][] straight = {{0, 0}, {0, 1}, {0, 2}, {0, 3}};
+    static int[][] nieun = {{0, 0}, {1, 0}, {2, 0}, {2, 1}};
+    static int[][] nieun2 = {{0, 1}, {1, 1}, {2, 1}, {2, 0}};
+    static int[][] riyl = {{0, 0}, {1, 0}, {1, 1}, {2, 1}};
+    static int[][] riyl2 = {{0, 1}, {1, 1}, {1, 0}, {2, 0}};
+    static int[][] tshape = {{0, 0}, {0, 1}, {0, 2}, {1, 1}};
+    static int[][][] shapes = {nemo, straight, nieun, nieun2, riyl, riyl2, tshape};
+
+    static int answer = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        board = new int[n][m];
-        isVisited = new boolean[n][m];
-        for (int i = 0; i < n; i++) {
-            board[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        }
-
-        br.close();
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                sum += board[i][j];
-                count++;
-                isVisited[i][j] = true;
-                dfs(i, j);
-                isVisited[i][j] = false;
-                count--;
-                sum -= board[i][j];
+        int[][] nums = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st1 = new StringTokenizer(br.readLine(), " ");
+            for (int j = 0; j < M; j++) {
+                int num = Integer.parseInt(st1.nextToken());
+                nums[i][j] = num;
             }
         }
 
-        System.out.println(max);
+        int[][] rotateNums1 = rotate(nums);
+        int[][] rotateNums2 = rotate(rotateNums1);
+        int[][] rotateNums3 = rotate(rotateNums2);
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                check(nums, i, j);
+                check(rotateNums1, j, i);
+                check(rotateNums2, i, j);
+                check(rotateNums3, j, i);
+            }
+        }
+        // 정답 출력
+        System.out.println(answer);
     }
 
-    public static void dfs(int x, int y) {
-        if (count == TETRO_SIZE) {
-            max = Math.max(max, sum);
-            return;
-        }
+    // 맵 회전
+    private static int[][] rotate(int[][] nums) {
+        int x = nums[0].length;
+        int y = nums.length;
+        int[][] result = new int[x][y];
 
-        int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < x; i++)
+            for (int j = 0; j < y; j++) {
+                result[i][j] = nums[y - (j + 1)][i];
+            }
 
-        for (int[] dir : delta) {
-            int nextX = x + dir[0];
-            int nextY = y + dir[1];
+        return result;
+    }
 
-            if ((0 <= nextX && nextX < n) && (0 <= nextY && nextY < m) && !isVisited[nextX][nextY]) {
-                if (count == 2) { // ㅗ
-                    sum += board[nextX][nextY];
-                    count++;
-                    isVisited[nextX][nextY] = true;
-                    dfs(x, y);
-                    isVisited[nextX][nextY] = false;
-                    count--;
-                    sum -= board[nextX][nextY];
+    private static void check(int[][] arr, int yStart, int xStart) {
+        int[] nx = new int[4];
+        int[] ny = new int[4];
+        int score;
+
+        for (int[][] shape : shapes) {
+            for (int j = 0; j < 4; j++) {
+                nx[j] = shape[j][1] + xStart;
+                ny[j] = shape[j][0] + yStart;
+            }
+
+            if (validCoordinate(nx, ny, arr)) {
+                score = 0;
+                for (int k = 0; k < 4; k++) {
+                    score += arr[ny[k]][nx[k]];
                 }
-
-                sum += board[nextX][nextY];
-                count++;
-                isVisited[nextX][nextY] = true;
-                dfs(nextX, nextY);
-                isVisited[nextX][nextY] = false;
-                count--;
-                sum -= board[nextX][nextY];
+                answer = Math.max(score, answer);
             }
         }
+    }
+
+    // 맵을 벗어난 인덱스인지 체크
+    private static boolean validCoordinate(int[] nx, int[] ny, int[][] arr) {
+        for (int i = 0; i < 4; i++) {
+            if (nx[i] < 0 || nx[i] >= arr[0].length || ny[i] < 0 || ny[i] >= arr.length)
+                return false;
+        }
+        return true;
     }
 }
