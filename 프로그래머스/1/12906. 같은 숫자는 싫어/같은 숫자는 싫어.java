@@ -1,16 +1,18 @@
 import java.util.*;
 
 public class Solution {
-    public Stack<Integer> solution(int []arr) {     
-        Stack<Integer> stack = new Stack<>();
+    public List<Integer> solution(int []arr) {
+        List<Integer> answer = new ArrayList<>();
         
-        stack.push(arr[0]);
-        for (int num : arr) {
-            if (stack.peek() == num) continue;
+        int lastNum = -1;
+        
+        for (int i = 0; i < arr.length; i++) {
+            if (lastNum == arr[i]) continue;
             
-            stack.push(num);
+            lastNum = arr[i];
+            answer.add(arr[i]);
         }
-        
-        return stack;
+
+        return answer;
     }
 }
