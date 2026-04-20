@@ -2,24 +2,21 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] scoville, int K) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        Queue<Integer> pq = new PriorityQueue<>((a,b) -> a-b);
+        int answer = 0;
         
-        for (int scov : scoville) {
-            pq.offer(scov);
+        Arrays.stream(scoville).forEach(i -> pq.add(i));
+        
+        while(!pq.isEmpty()) {
+            if (pq.peek() >= K) {
+                return answer++;
+            }
+            if (pq.size() == 1) break;
+            
+            pq.add(pq.poll() + pq.poll()*2);
+            answer++;
         }
         
-        int tryCnt = 0;
-        
-        if(pq.peek() >= K) return 0;
-        
-        while(pq.size() >= 2) {
-            tryCnt++;
-            
-            pq.offer(pq.poll() + 2 * pq.poll());
-            
-            if (pq.peek() >= K) break;
-        }
-        
-        return pq.peek() >= K ? tryCnt : -1;
+        return -1;
     }
 }
