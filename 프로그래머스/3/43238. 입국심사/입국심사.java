@@ -1,27 +1,32 @@
-import java.util.*;
-
 class Solution {
     public long solution(int n, int[] times) {
-        long answer = (long)Arrays.stream(times).max().getAsInt() * n;
-
-        long min = 1;
-        long max = answer;
-
+        long answer = 0;
+        long max = 0;
+        
+        for(int t : times) {
+            max = Math.max(t, max);
+        }
+        max *= n;
+        
+        long min = 0;
+        
         while(min <= max) {
-            long mid = (max + min) / 2;
-
-            long passed = Arrays.stream(times).mapToLong(t -> mid/t).sum();
+            long mid = (min+max)/2;
             
-            System.out.println(passed + " " + mid);
+            long immied = 0;
             
-            if (passed >= n) {
+            for(int t : times) {
+                immied += mid/t;
+            }
+            
+            if (immied >= n) {
+                max = mid-1;
                 answer = mid;
-                max = mid - 1;
             } else {
-                min = mid + 1; 
+                min = mid+1;
             }
         }
-
+        
         return answer;
     }
 }
