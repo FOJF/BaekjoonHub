@@ -1,39 +1,47 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int n, int[][] edges) {
-        int[] distance = new int[n+1];
+    public int solution(int n, int[][] edge) {
         
-        List<List<Integer>> adjList = new ArrayList<>();
+        List<List<Integer>> adj = new ArrayList<>();
         
-        for (int i = 0; i < n+1; i++) {
-            adjList.add(new ArrayList<>());
+        for(int i = 0; i < n+1; i++) {
+            adj.add(new ArrayList<>());
         }
         
-        for (int[] edge : edges) {
-            adjList.get(edge[0]).add(edge[1]);
-            adjList.get(edge[1]).add(edge[0]);
+        for(int[] e : edge) {
+            adj.get(e[0]).add(e[1]);
+            adj.get(e[1]).add(e[0]);
         }
         
+        int[] dist = new int[n+1];
         
-        Queue<Integer> q = new LinkedList<>();
-        int max = 0;
+        Queue<Integer> q = new ArrayDeque<>();
         
         q.add(1);
-        distance[1] = 1;
+        dist[1] = 1;
+        
+        int answer = 1;
+        int max = 1;
         
         while(!q.isEmpty()) {
-            int now = q.poll();
+            int cur = q.poll();
             
-            for (int next : adjList.get(now)) {
-                if (distance[next] != 0) continue;
+            for(int next : adj.get(cur)) {
+                if (dist[next] != 0) continue;
                 
                 q.add(next);
-                distance[next] = distance[now] + 1;
-                max = Math.max(max, distance[next]);
+                dist[next] = dist[cur]+1;
+                
+                if (max < dist[next]) {
+                    max = dist[next];
+                    answer = 1;
+                } else if (max == dist[next]) {
+                    answer++;
+                }
             }
         }
-        int m = max;
-        return (int)Arrays.stream(distance).filter(i -> i == m).count();
+        
+        return answer;
     }
 }
