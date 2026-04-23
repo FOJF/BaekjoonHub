@@ -1,33 +1,26 @@
 import java.util.*;
 
 class Solution {
-    public List<Integer> solution(int[] progresses, int[] speeds) {
-        Stack<Integer> stack = new Stack<>();
-        
-        for(int i = progresses.length-1; i >= 0; i--) {
-            int day = (100-progresses[i])/speeds[i];
-            if ((100-progresses[i])%speeds[i] != 0) day++;
-            stack.push(day);
+    public List<Integer> solution(int[] p, int[] s) {
+        for(int i = 0; i < p.length; i++) {
+            int o = (100-p[i])%s[i] > 0 ? 1 : 0;
+            p[i] = (100-p[i]) / s[i] + o;
         }
-        
-        System.out.println(stack);
         
         List<Integer> answer = new ArrayList<>();
         
-        while(!stack.isEmpty()) {
-            int release = 1;
-            int firstProgReleaseDay = stack.pop();
-            
-            while(!stack.isEmpty() && stack.peek() <= firstProgReleaseDay) {
-                stack.pop();
-                release++;
+        int a = 1;
+        int d = p[0];
+        for(int i = 1; i < p.length; i++) {
+            if (p[i] > d) {
+                answer.add(a);
+                a = 1;
+                d = p[i];
+            } else {
+                a++;
             }
-            
-            answer.add(release);
         }
-        
-        
-        
+        answer.add(a);
         return answer;
     }
 }
