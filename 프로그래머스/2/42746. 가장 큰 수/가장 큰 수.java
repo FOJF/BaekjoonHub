@@ -3,21 +3,23 @@ import java.util.*;
 class Solution {
     public String solution(int[] numbers) {
         List<Integer> nums = new ArrayList<>();
+        for(int n : numbers) {
+            nums.add(n);
+        }
         
-        Arrays.stream(numbers).forEach(n -> nums.add(n));
-        
-        nums.sort((i1, i2) -> {
-            Long strcat1 = Long.parseLong(i1+""+i2);
-            Long strcat2 = Long.parseLong(i2+""+i1);
-            return strcat2.compareTo(strcat1);
+        nums.sort((a, b) -> {
+            int bb = Integer.parseInt(b + "" + a);
+            int aa = Integer.parseInt(a + "" + b);
+            
+            return bb - aa;
         });
-        
-        StringBuilder sb = new StringBuilder();
         
         if (nums.get(0) == 0) return "0";
         
-        nums.stream().forEach(n -> sb.append(n));
-        
+        StringBuilder sb = new StringBuilder();
+        for(int n : nums) {
+            sb.append(n);
+        }
         return sb.toString();
     }
 }
