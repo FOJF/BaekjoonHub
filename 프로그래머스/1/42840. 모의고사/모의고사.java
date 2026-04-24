@@ -7,10 +7,9 @@ class Solution {
         int[] cnt = new int[3];
         
         for(int i = 0; i < answers.length; i++) {
-            
-            if (supojas[0][i%supojas[0].length] == answers[i]) cnt[0]++;
-            if (supojas[1][i%supojas[1].length] == answers[i]) cnt[1]++;
-            if (supojas[2][i%supojas[2].length] == answers[i]) cnt[2]++;
+            for (int j = 0; j < cnt.length; j++) {
+                if (supojas[j][i%supojas[j].length] == answers[i]) cnt[j]++;
+            }
         }
         
         int max = Math.max(cnt[0], Math.max(cnt[1], cnt[2]));
