@@ -1,17 +1,13 @@
 class Solution {
     public int solution(String name) {
-        int answer = 0;
+        int udMove = 0;
         
         for(char c : name.toCharArray()) {
-            // 위, 아래 키 계산
-            answer += Math.min(c - 'A', 'Z' - c + 1);
+            udMove += Math.min(c - 'A', 'Z' - c + 1);
         }
         
         int lrMove = Integer.MAX_VALUE;
         for(int i = 0; i < name.length(); i++) {
-            // 좌우는 어캐함?
-            // if (name.charAt(i) == 'A') continue;
-            // 시작 위치 정하기
             int tmp = Math.min((i + name.length()) % name.length(), (-i + name.length()) % name.length());
              
             int lMove = 0;
@@ -37,6 +33,6 @@ class Solution {
             lrMove = Math.min(lrMove, tmp + Math.min(lMove, rMove));
         }
         
-        return answer + lrMove;
+        return udMove + lrMove;
     }
 }
