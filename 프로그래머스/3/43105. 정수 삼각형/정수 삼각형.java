@@ -1,12 +1,13 @@
-import java.util.*;
-
 class Solution {
     public int solution(int[][] triangle) {
-        for (int i = triangle.length-1; i > 0; i--) {
-            for (int j = 0; j < triangle[i].length-1; j++) {
-                triangle[i-1][j] += Math.max(triangle[i][j], triangle[i][j+1]);
+        int[] t = triangle[triangle.length-1];
+        
+        for(int i = triangle.length-2; i >= 0 ; i--) {
+            for(int j = 0; j <= i; j++) {
+                t[j] = triangle[i][j] + Math.max(t[j], t[j+1]);
             }
         }
-        return triangle[0][0];
+        
+        return t[0];
     }
 }
