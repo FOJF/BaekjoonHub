@@ -13,18 +13,9 @@ class Solution {
             } else {
                 if (m.isEmpty()) continue;
                 
-                int k = 0;
-                if (s[1].charAt(0) == '1') {
-                    k = m.lastKey();
-                    m.put(k, m.get(k)-1);
-                    
-                    if (m.lastEntry().getValue() == 0) m.pollLastEntry();
-                } else {
-                    k = m.firstKey();
-                    m.put(k, m.get(k)-1);
-                    
-                    if (m.firstEntry().getValue() == 0) m.pollFirstEntry();
-                }
+                Map.Entry<Integer, Integer> e = s[1].charAt(0) == '1' ? m.pollLastEntry() : m.pollFirstEntry();
+                
+                if (e.getValue() > 1) m.put(e.getKey(), e.getValue()-1);
             }
         }
         
