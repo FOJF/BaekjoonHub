@@ -4,8 +4,8 @@ class Solution {
     private static int answer = 0;
 
     private static Set<Integer> isChecked = new HashSet<>();
-    private static List<Integer> idxs = new ArrayList<>();
     private static boolean[] hasIdx;
+    private int n = 0;
     
     public int solution(String numbers) {
         hasIdx = new boolean[numbers.length()];
@@ -16,11 +16,6 @@ class Solution {
     }
     
     private void dfs(String numbers) {
-        int n = 0;
-        for(int i = 0; i < idxs.size(); i++) {
-            n *= 10;
-            n += numbers.charAt(idxs.get(i))-'0';
-        }
         
         if (!isChecked.contains(n)) {
             isChecked.add(n);
@@ -31,11 +26,14 @@ class Solution {
         for(int i = 0; i < numbers.length(); i++) {
             if (hasIdx[i]) continue;
             
-            idxs.add(i);
             hasIdx[i] = true;
+            n *= 10;
+            n += numbers.charAt(i)-'0';
+            
             dfs(numbers);
-            idxs.remove(idxs.size()-1);
+            
             hasIdx[i] = false;
+            n /= 10;
         }
     }
     
