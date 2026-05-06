@@ -2,52 +2,33 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] maps) {
-        int[][] delta = {{0,1}, {0,-1}, {1,0}, {-1,0}};
+        int m = maps.length;
+        int n = maps[0].length;
         
-        int[][] distance = new int[maps.length][maps[0].length];
-        
-        Queue<int[]> q = new LinkedList<>();
+        int[][] dist = new int[m][n];
+        Queue<int[]> q = new ArrayDeque<>();
         
         q.add(new int[]{0,0});
-        distance[0][0] = 1;
+        dist[0][0] = 1;
+        
+        int[][] delta = {{0,1},{0,-1},{1,0},{-1,0}};
         
         while(!q.isEmpty()) {
-            int[] now = q.poll();
+            int[] cur = q.poll();
             
-            int x = now[0];
-            int y = now[1];
-            
-            if (x == maps.length-1 && y == maps[x].length-1) return distance[x][y];
-            
-            for (int[] dir : delta) {
-                int nx = x + dir[0];
-                int ny = y + dir[1];
+            for(int[] dir : delta) {
+                int nx = cur[0] + dir[0];
+                int ny = cur[1] + dir[1];
                 
-                if ((0 <= nx && nx < maps.length) && (0 <= ny && ny < maps[nx].length) 
-                    && maps[nx][ny] == 1
-                    && distance[nx][ny] == 0) {
-                    q.add(new int[]{nx,ny});
-                    distance[nx][ny] = distance[x][y] + 1;
+                if (0 <= nx && nx < m && 0 <= ny && ny < n && dist[nx][ny] == 0 && maps[nx][ny] != 0) {
+                    if (nx == m-1 && ny == n-1) return dist[cur[0]][cur[1]]+1;
+                    
+                    q.add(new int[]{nx, ny});
+                    dist[nx][ny] = dist[cur[0]][cur[1]]+1;
                 }
             }
         }
         
-        System.out.println(Arrays.deepToString(distance));
-        
         return -1;
     }
 }
-/*
-	[[1, 0, 1, 1, 1],
-     [1, 0, 1, 0, 1],
-     [1, 0, 1, 1, 1],
-     [1, 1, 1, 0, 1],
-     [0, 0, 0, 0, 1]]
-
-[[1, 0, 9, 10, 0],
- [2, 0, 8, 0, 0],
- [3, 0, 7, 8, 0],
- [4, 5, 6, 0, 0],
- [0, 0, 0, 0, 0]]
-
-*/
