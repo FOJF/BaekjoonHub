@@ -6,7 +6,7 @@ class Solution {
         return answer;
     }
     
-    private static int answer = 0;
+    private int answer = 0;
     private void dfs(int k, int[][] dungeons, boolean[] visited, int depth) {
         answer = Math.max(answer, depth);
         
