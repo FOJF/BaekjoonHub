@@ -8,23 +8,17 @@ class Solution {
         List<String> blur = new ArrayList<>();
         
         int offset = 0;
-        int i = 0;
+        int blurIdx = 0;
         
         for(String word : words) {
             int start = offset;
             int end = offset + (word.length()-1);
             
-            boolean isBlur = false;
-            for (; i < blurRanges.length; i++) {
-                if (blurRanges[i][0] > end) break;
-                
-                if (start <= blurRanges[i][1] && end >= blurRanges[i][0]) {
-                    isBlur = true;
-                    break;
-                }
+            while (blurIdx < blurRanges.length && blurRanges[blurIdx][1] < start) {
+                blurIdx++;
             }
             
-            if (isBlur) {
+            if (blurIdx < blurRanges.length && blurRanges[blurIdx][0] <= end) {
                 blur.add(word);
             } else {
                 normal.add(word);
@@ -33,12 +27,9 @@ class Solution {
             offset += word.length()+1;
         }
         
-        // System.out.println(normal);
-        // System.out.println(blur);
-        
         Set<String> important = new HashSet<>();
         for(String b : blur) {
-            if (normal.contains(b) || important.contains(b)) continue;
+            if (normal.contains(b)) continue;
             
             important.add(b);
         }
