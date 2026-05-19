@@ -21,29 +21,25 @@ class Solution {
             boolean[] visited = new boolean[n+1];
             int from = wire[0];
             int to = wire[1];
+            
             int cnt = 0;
-            for(int i = 1; i <= n; i++) {
-                if (visited[i]) continue;
+            
+            q.add(from);
+            visited[from] = true;
 
-                int cntTmp = 0;
-                q.add(i);
-                visited[i] = true;
+            while(!q.isEmpty()) {
+                int cur = q.poll();
+                cnt++;
 
-                while(!q.isEmpty()) {
-                    int cur = q.poll();
-                    cntTmp++;
+                for(int next : adj.get(cur)) {
+                    if (visited[next] || (cur == from && next == to)) continue;
 
-                    for(int next : adj.get(cur)) {
-                        if (visited[next] || (cur == from && next == to) || (next == from && cur == to)) continue;
-
-                        q.add(next);
-                        visited[next] = true;
-                    }
+                    q.add(next);
+                    visited[next] = true;
                 }
-                cnt = cnt > 0 ? cnt-cntTmp : cntTmp;
             }
-
-            answer = Math.min(answer, Math.abs(cnt));
+            
+            answer = Math.min(answer, Math.abs(cnt*2-n));
         }
         return answer;
     }
