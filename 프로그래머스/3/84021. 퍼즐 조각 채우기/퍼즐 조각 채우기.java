@@ -13,8 +13,7 @@ class Solution {
 
                     for(int k = 0; k < table.length; k++) {
                         for(int l = 0; l < table.length; l++) {
-                            if (table[k][l] == 0) continue;
-
+                            if (table[k][l] == 0 || k > 0 && table[k-1][l] == 1 || l > 0 && table[k][l-1] == 1) continue;
                             if (isSame(game_board, i, j, table, k, l)) {
                                 answer += paint(game_board, i, j);
                                 paint(table, k, l);
