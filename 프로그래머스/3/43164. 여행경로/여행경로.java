@@ -22,9 +22,7 @@ class Solution {
         if (!answer.isEmpty()) return;
         if (visited.size() == ticketCnt) {
             answer.add("ICN");
-            for(String v : visited) {
-                answer.add(v);
-            }
+            answer.addAll(visited);
             return;
         }
         
